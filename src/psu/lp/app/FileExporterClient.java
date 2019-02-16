@@ -5,15 +5,17 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
+import psu.lp.app.testConsole.message.client.MessageWorker;
 
 public class FileExporterClient extends Application {
 
     @Override
     public void start(Stage primaryStage) throws Exception{
 
-        Parent root = FXMLLoader.load(getClass().getResource("FileExporterTemplate.fxml"));
-        primaryStage.setTitle("Hello World");
-        primaryStage.setScene(new Scene(root, 600, 400));
+        Parent loginForm = FXMLLoader.load(getClass().getResource("LoginTemplate.fxml"));
+        //Parent root = FXMLLoader.load(getClass().getResource("FileExporterTemplate.fxml"));
+        primaryStage.setTitle("Login | FileSender");
+        primaryStage.setScene(new Scene(loginForm, 300, 90));
         //setUserAgentStylesheet(STYLESHEET_MODENA);
         primaryStage.show();
     }

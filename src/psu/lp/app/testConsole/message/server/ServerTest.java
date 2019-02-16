@@ -13,7 +13,7 @@ public class ServerTest {
             while (true) {
                 new UserConnection(listener.accept()).start();
             }
-        } catch (IOException e) {
+        } catch (IOException | ClassNotFoundException e) {
             e.printStackTrace();
         }
     }
