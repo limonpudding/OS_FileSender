@@ -6,7 +6,8 @@ public enum MessageType {
     NEW_FILE_REQUEST("Запрос на отправку файла"),
     AUTH("Попытка аутентификации"),
     ERROR_SERVER("Ошибка на стороне сервера"),
-    ERROR_CLIENT("Ошибка на стороне клиента");
+    ERROR_CLIENT("Ошибка на стороне клиента"),
+    MESSAGE("Сообщение");
 
     private String info;
 

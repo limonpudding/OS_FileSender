@@ -9,7 +9,7 @@ import java.net.Socket;
 
 public class MessageWorker extends Thread {
 
-    private FileExporterClientController fileExporterClientController;
+    private FileExporterClientController controller;
     private final static String SERVER_NAME = "SERVER_HOST";
 
     private static MessageWorker instance;
@@ -38,7 +38,7 @@ public class MessageWorker extends Thread {
 
     public static MessageWorker getInstance() throws IOException {
         if (instance == null) {
-            instance = new MessageWorker(new Socket("localhost", 4004));
+            instance = new MessageWorker(new Socket("192.168.1.33", 25565));
         }
         return instance;
     }
@@ -46,6 +46,12 @@ public class MessageWorker extends Thread {
     @Override
     public void run() {
         try {
+            // TODO не очевидно зачем это нужно, возможно стоит подумать о том,
+            //  как это можно переделать (про работу и создание MessageWorker'а в целом)
+            //  P.S. я уже и сам забыл, зачем это нужно
+            while (controller == null) {
+                Thread.sleep(2000);
+            }
             while (clientSocket.isConnected()) {
                 Message message = (Message) messageInput.readObject();
                 switch (message.getMessageType()) {
@@ -54,6 +60,7 @@ public class MessageWorker extends Thread {
 //                        break;
                     case USER_CONNECTED:
                         // Обновить список пользователей
+                        controller.addUserToListView(message.getContent());
                         break;
                     case USER_DISCONNECTED:
                         // Обновить список пользователей
@@ -63,7 +70,10 @@ public class MessageWorker extends Thread {
                         break;
                     case NEW_FILE_REQUEST:
                         // Обработать получение файла
-                        fileExporterClientController.pushToTextArea(message.getSender(), message.getContent());
+                        break;
+                    case MESSAGE:
+                        // Обработать полученное сообщение
+                        controller.pushToTextArea(message.getSender(), message.getContent());
                         break;
                     case ERROR_CLIENT:
                         // ?
@@ -106,7 +116,7 @@ public class MessageWorker extends Thread {
     }
 
     public void setController(FileExporterClientController controller) {
-        fileExporterClientController = controller;
+        this.controller = controller;
     }
 
     public static void sendFile() {

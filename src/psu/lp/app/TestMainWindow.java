@@ -11,7 +11,7 @@ public class TestMainWindow {
 
     TestMainWindow() throws IOException {
         Pane mainWindow = FXMLLoader.load(getClass().getResource("FileExporterTemplate.fxml"));
-        Scene mainScene = new Scene(mainWindow, 600, 400);
+        Scene mainScene = new Scene(mainWindow, 700, 400);
         Stage stage = new Stage();
         stage.setScene(mainScene);
         stage.setTitle("Main File Sender Windows");

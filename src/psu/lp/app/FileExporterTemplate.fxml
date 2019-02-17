@@ -3,6 +3,7 @@
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ListView?>
 <?import javafx.scene.control.TextArea?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.ColumnConstraints?>
@@ -10,13 +11,13 @@
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.layout.RowConstraints?>
 
-<Pane fx:id="root" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="psu.lp.app.FileExporterClientController">
+<Pane fx:id="root" prefHeight="400.0" prefWidth="700.0" xmlns="http://javafx.com/javafx/8.0.172-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="psu.lp.app.FileExporterClientController">
     <children>
-        <GridPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0">
+        <GridPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="700.0">
             <columnConstraints>
-                <ColumnConstraints hgrow="SOMETIMES" maxWidth="474.0" minWidth="10.0" prefWidth="389.0" />
-                <ColumnConstraints hgrow="SOMETIMES" maxWidth="294.0" minWidth="10.0" prefWidth="105.0" />
-            <ColumnConstraints hgrow="SOMETIMES" maxWidth="294.0" minWidth="10.0" prefWidth="130.0" />
+                <ColumnConstraints hgrow="SOMETIMES" maxWidth="600.0" minWidth="400.0" prefWidth="400.0" />
+                <ColumnConstraints hgrow="SOMETIMES" maxWidth="100.0" minWidth="100.0" prefWidth="100.0" />
+            <ColumnConstraints hgrow="SOMETIMES" maxWidth="200.0" minWidth="200.0" prefWidth="200.0" />
             </columnConstraints>
             <rowConstraints>
                 <RowConstraints maxHeight="127.0" minHeight="10.0" prefHeight="23.0" vgrow="SOMETIMES" />
@@ -32,12 +33,20 @@
                <GridPane.margin>
                   <Insets left="10.0" right="10.0" />
                </GridPane.margin></TextField>
-            <Button fx:id="fileDialogButton" mnemonicParsing="false" onAction="#openFileDialog" text="Изменить" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+            <Button fx:id="fileDialogButton" contentDisplay="CENTER" maxWidth="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#openFileDialog" prefWidth="90.0" text="Изменить" GridPane.columnIndex="1" GridPane.rowIndex="1" />
             <TextArea fx:id="textArea" prefHeight="200.0" prefWidth="200.0" GridPane.rowIndex="2">
                <GridPane.margin>
                   <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
                </GridPane.margin></TextArea>
-            <Button fx:id="sendTestButton" mnemonicParsing="false" onAction="#sendTestMessage" text="Button" GridPane.columnIndex="2" GridPane.rowIndex="1" />
+            <Button fx:id="sendButton" mnemonicParsing="false" onAction="#sendMessage" text="Button" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+            <ListView fx:id="usersList" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="2" GridPane.rowIndex="1" GridPane.rowSpan="2">
+               <GridPane.margin>
+                  <Insets bottom="10.0" right="10.0" />
+               </GridPane.margin></ListView>
+            <Label text="Список пользователей" GridPane.columnIndex="2">
+               <GridPane.margin>
+                  <Insets right="10.0" top="10.0" />
+               </GridPane.margin></Label>
             </children>
         </GridPane>
     </children>

@@ -13,7 +13,6 @@ public class UserConnection extends Thread {
     private final static String SERVER_NAME = "SERVER_HOST";
     private static HashMap<String, Socket> connectionKeeper;
     private static ArrayList<UserConnection> userConnections = new ArrayList<>();
-    //private static ArrayList
 
     private String userName;
     private Socket userSocket;
@@ -48,6 +47,8 @@ public class UserConnection extends Thread {
             authResponce.setRecipient(userName);
             messageOutput.writeObject(authResponce);
             messageOutput.flush();
+
+            notifyUserConnected();
         }
     }
 
@@ -66,20 +67,18 @@ public class UserConnection extends Thread {
                 Message test = (Message) messageInput.readObject();
                 switch (test.getMessageType()) {
                     case NEW_FILE_REQUEST:
+                        System.out.println("попытка отправки файла");
                         // попытка отправки файла
+
+                        break;
+                    case MESSAGE:
                         Message sendTestMessage = new Message();
-                        sendTestMessage.setMessageType(MessageType.NEW_FILE_REQUEST);
+                        sendTestMessage.setMessageType(MessageType.MESSAGE);
                         sendTestMessage.setSender(test.getSender());
-                        sendTestMessage.setRecipient(test.getSender());
                         sendTestMessage.setContent(test.getContent() + "\n");
 
                         //для всех клиентов
-                        Iterator users = userConnections.listIterator();
-                        while (users.hasNext()) {
-                            UserConnection currentUserConnection = (UserConnection)users.next();
-                            currentUserConnection.getMessageOutput().writeObject(sendTestMessage);
-                            currentUserConnection.getMessageOutput().flush();
-                        }
+                        messageForAll(sendTestMessage);
                         break;
                     case ERROR_CLIENT:
                         break;
@@ -96,7 +95,25 @@ public class UserConnection extends Thread {
         }
     }
 
-    public ObjectOutputStream getMessageOutput() {
+    private synchronized void messageForAll(Message sendTestMessage) throws IOException {
+        Iterator users = userConnections.listIterator();
+        while (users.hasNext()) {
+            UserConnection currentUserConnection = (UserConnection)users.next();
+            sendTestMessage.setRecipient(currentUserConnection.getName());
+            currentUserConnection.getMessageOutput().writeObject(sendTestMessage);
+            currentUserConnection.getMessageOutput().flush();
+        }
+    }
+
+    private void notifyUserConnected() throws IOException {
+        Message notify = new Message();
+        notify.setMessageType(MessageType.USER_CONNECTED);
+        notify.setSender(SERVER_NAME);
+        notify.setContent(userName);
+        messageForAll(notify);
+    }
+
+    private ObjectOutputStream getMessageOutput() {
         return messageOutput;
     }
 }

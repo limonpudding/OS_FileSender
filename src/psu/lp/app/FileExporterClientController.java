@@ -1,9 +1,9 @@
 package psu.lp.app;
 
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
-import javafx.scene.control.Button;
-import javafx.scene.control.TextArea;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.layout.Pane;
 import javafx.stage.FileChooser;
 import psu.lp.app.testConsole.message.client.MessageWorker;
@@ -11,6 +11,8 @@ import psu.lp.app.testConsole.message.client.MessageWorker;
 import java.io.IOException;
 
 public class FileExporterClientController {
+
+    ObservableList<String> connectedUsers;
 
     @FXML
     private Button fileDialogButton;
@@ -25,15 +27,22 @@ public class FileExporterClientController {
     private TextArea textArea;
 
     @FXML
-    private Button sendTestButton;
+    private Button sendButton;
 
     @FXML
-    private void sendTestMessage() throws IOException {
+    private ListView usersList;
+
+    @FXML
+    private void sendMessage() throws IOException {
         MessageWorker.getInstance().sendMessage(filePathTextField.getText());
     }
 
     public FileExporterClientController() throws IOException {
         MessageWorker.getInstance().setController(this);
+        connectedUsers = FXCollections.observableArrayList();
+        usersList = new ListView<String>();
+        usersList.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
+        usersList.setItems(connectedUsers);
     }
 
     @FXML
@@ -52,4 +61,9 @@ public class FileExporterClientController {
         textArea.appendText(sender + ": " + message);
     }
 
+    public synchronized void addUserToListView(String name) {
+        //connectedUsers = FXCollections.observableArrayList();
+        connectedUsers.add(name);
+        //usersList.setItems(connectedUsers);
+    }
 }
