@@ -5,6 +5,7 @@ import psu.entities.MessageType;
 
 import java.io.*;
 import java.net.Socket;
+import java.util.List;
 
 import static psu.utils.GlobalConstants.PORT;
 import static psu.utils.GlobalConstants.SERVER_IP;
@@ -62,7 +63,7 @@ public class MessageWorker extends Thread {
 //                        break;
                     case USER_CONNECTED:
                         // Обновить список пользователей
-                        controller.addUserToListView(message.getContent());
+                        controller.setUsersList((List<String>) message.getAttachment());
                         break;
                     case USER_DISCONNECTED:
                         // Обновить список пользователей

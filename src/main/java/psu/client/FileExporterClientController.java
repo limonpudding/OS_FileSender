@@ -9,10 +9,11 @@ import javafx.stage.FileChooser;
 import psu.client.MessageWorker;
 
 import java.io.IOException;
+import java.util.List;
 
 public class FileExporterClientController {
 
-    ObservableList<String> connectedUsers;
+    private ObservableList<String> connectedUsers;
 
     @FXML
     private Button fileDialogButton;
@@ -65,5 +66,10 @@ public class FileExporterClientController {
         //connectedUsers = FXCollections.observableArrayList();
         connectedUsers.add(name);
         //usersList.setItems(connectedUsers);
+    }
+
+    public synchronized void setUsersList(List<String> users) {
+        connectedUsers.setAll(users);
+        usersList.setItems(connectedUsers);
     }
 }

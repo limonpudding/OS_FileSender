@@ -7,6 +7,7 @@ public class Message implements Serializable {
     private String content;
     private String sender;
     private String recipient;
+    private Object attachment;
 
     public MessageType getMessageType() {
         return messageType;
@@ -38,5 +39,13 @@ public class Message implements Serializable {
 
     public void setRecipient(String recipient) {
         this.recipient = recipient;
+    }
+
+    public Object getAttachment() {
+        return attachment;
+    }
+
+    public void setAttachment(Object attachment) {
+        this.attachment = attachment;
     }
 }
