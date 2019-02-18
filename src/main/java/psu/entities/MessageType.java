@@ -1,4 +1,4 @@
-package psu.lp.app.testConsole.message;
+package psu.entities;
 
 public enum MessageType {
     USER_CONNECTED("Подключился новый пользователь"),

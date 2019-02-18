@@ -1,4 +1,4 @@
-package psu.lp.app;
+package psu.client;
 
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -8,12 +8,11 @@ import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
-import psu.lp.app.testConsole.message.client.MessageWorker;
+import psu.client.FileExporterClient;
+import psu.client.MessageWorker;
+import psu.utils.GlobalConstants;
 
 import java.io.IOException;
-
-import static psu.lp.app.FileExporterClient.loginFormStage;
-import static psu.lp.app.GlobalConstants.MAIN_WINDOW_FXML;
 
 public class LoginFormController {
 
@@ -32,7 +31,7 @@ public class LoginFormController {
             succesConnect.setContentText("Успешно подключен");
             succesConnect.showAndWait();
             createMainForm();
-            loginFormStage.close();
+            FileExporterClient.loginFormStage.close();
         }
     }
 
@@ -48,9 +47,9 @@ public class LoginFormController {
     private Pane getMainFormResource() {
         Pane mainWindow;
         try {
-            mainWindow = FXMLLoader.load(getClass().getResource(MAIN_WINDOW_FXML));
+            mainWindow = FXMLLoader.load(getClass().getResource(GlobalConstants.MAIN_WINDOW_FXML));
         } catch (IOException e) {
-            throw new RuntimeException("Не найден шаблон " + MAIN_WINDOW_FXML);
+            throw new RuntimeException("Не найден шаблон " + GlobalConstants.MAIN_WINDOW_FXML);
         }
         return mainWindow;
     }

@@ -1,4 +1,4 @@
-package psu.lp.app;
+package psu.utils;
 
 public class GlobalConstants {
     public static final String LOGIN_WINDOW_FXML = "LoginTemplate.fxml";

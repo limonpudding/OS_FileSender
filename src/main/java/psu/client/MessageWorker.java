@@ -1,14 +1,13 @@
-package psu.lp.app.testConsole.message.client;
+package psu.client;
 
-import psu.lp.app.FileExporterClientController;
-import psu.lp.app.testConsole.message.Message;
-import psu.lp.app.testConsole.message.MessageType;
+import psu.entities.Message;
+import psu.entities.MessageType;
 
 import java.io.*;
 import java.net.Socket;
 
-import static psu.lp.app.GlobalConstants.PORT;
-import static psu.lp.app.GlobalConstants.SERVER_IP;
+import static psu.utils.GlobalConstants.PORT;
+import static psu.utils.GlobalConstants.SERVER_IP;
 
 public class MessageWorker extends Thread {
 

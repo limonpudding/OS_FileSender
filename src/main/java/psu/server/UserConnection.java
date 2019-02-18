@@ -1,7 +1,7 @@
-package psu.lp.app.testConsole.message.server;
+package psu.server;
 
-import psu.lp.app.testConsole.message.Message;
-import psu.lp.app.testConsole.message.MessageType;
+import psu.entities.Message;
+import psu.entities.MessageType;
 
 import java.io.*;
 import java.net.Socket;

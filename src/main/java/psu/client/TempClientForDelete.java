@@ -1,12 +1,12 @@
-package psu.lp.app.testConsole.message.client;
+package psu.client;
 
-import psu.lp.app.testConsole.message.Message;
-import psu.lp.app.testConsole.message.MessageType;
+import psu.entities.Message;
+import psu.entities.MessageType;
 
 import java.io.*;
 import java.net.Socket;
 
-public class Client {
+public class TempClientForDelete {
     private static InputStream inputStream;
     private static OutputStream outputStream;
 

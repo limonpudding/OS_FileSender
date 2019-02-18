@@ -1,4 +1,4 @@
-package psu.lp.app.testConsole.message;
+package psu.entities;
 
 import java.io.Serializable;
 

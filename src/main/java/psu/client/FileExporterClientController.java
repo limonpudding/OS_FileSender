@@ -1,4 +1,4 @@
-package psu.lp.app;
+package psu.client;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -6,7 +6,7 @@ import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.layout.Pane;
 import javafx.stage.FileChooser;
-import psu.lp.app.testConsole.message.client.MessageWorker;
+import psu.client.MessageWorker;
 
 import java.io.IOException;
 
