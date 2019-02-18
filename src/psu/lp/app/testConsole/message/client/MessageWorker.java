@@ -7,6 +7,9 @@ import psu.lp.app.testConsole.message.MessageType;
 import java.io.*;
 import java.net.Socket;
 
+import static psu.lp.app.GlobalConstants.PORT;
+import static psu.lp.app.GlobalConstants.SERVER_IP;
+
 public class MessageWorker extends Thread {
 
     private FileExporterClientController controller;
@@ -38,7 +41,7 @@ public class MessageWorker extends Thread {
 
     public synchronized static MessageWorker getInstance() throws IOException {
         if (instance == null) {
-            instance = new MessageWorker(new Socket("192.168.1.33", 25565));
+            instance = new MessageWorker(new Socket(SERVER_IP, PORT));
         }
         return instance;
     }
