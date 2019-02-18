@@ -12,7 +12,7 @@ public class FileExporterClient extends Application {
     public static Stage loginFormStage;
 
     @Override
-    public void start(Stage primaryStage) throws Exception{
+    public void start(Stage primaryStage) throws Exception {
         loginFormStage = primaryStage;
         Parent loginForm = FXMLLoader.load(getClass().getResource(GlobalConstants.LOGIN_WINDOW_FXML));
         //Parent root = FXMLLoader.load(getClass().getResource("FileExporterTemplate.fxml"));
@@ -21,7 +21,6 @@ public class FileExporterClient extends Application {
         //setUserAgentStylesheet(STYLESHEET_MODENA);
         loginFormStage.show();
     }
-
 
 
     public static void main(String[] args) {

@@ -1,9 +1,9 @@
 package psu.utils;
 
 public class GlobalConstants {
-    public static final String LOGIN_WINDOW_FXML = "LoginTemplate.fxml";
-    public static String SERVER_IP = "localhost";
-    public static int PORT = 25565;
-    public static final String MAIN_WINDOW_FXML = "FileExporterTemplate.fxml";
-
+    public final static String LOGIN_WINDOW_FXML = "/layouts/LoginTemplate.fxml";
+    public final static String SERVER_NAME = "SERVER_HOST";
+    public final static String SERVER_IP = "localhost";
+    public final static int PORT = 25565;
+    public final static String MAIN_WINDOW_FXML = "/layouts/FileExporterTemplate.fxml";
 }

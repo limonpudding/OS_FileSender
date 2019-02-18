@@ -2,6 +2,7 @@ package psu.server;
 
 import psu.entities.Message;
 import psu.entities.MessageType;
+import psu.utils.GlobalConstants;
 
 import java.io.*;
 import java.net.Socket;
@@ -10,7 +11,6 @@ import java.util.HashMap;
 import java.util.Iterator;
 
 public class UserConnection extends Thread {
-    private final static String SERVER_NAME = "SERVER_HOST";
     private static HashMap<String, Socket> connectionKeeper;
     private static ArrayList<UserConnection> userConnections = new ArrayList<>();
 
@@ -42,7 +42,7 @@ public class UserConnection extends Thread {
 
             Message authResponce = new Message();
             authResponce.setMessageType(MessageType.AUTH);
-            authResponce.setSender(SERVER_NAME);
+            authResponce.setSender(GlobalConstants.SERVER_NAME);
             authResponce.setContent("success");
             authResponce.setRecipient(userName);
             messageOutput.writeObject(authResponce);
@@ -87,7 +87,7 @@ public class UserConnection extends Thread {
                         Message errorMessage = new Message();
                         errorMessage.setMessageType(MessageType.ERROR_SERVER);
                         errorMessage.setContent("Произошла ошибка, данные, полученные сервером, не прошли проверку.");
-                        errorMessage.setSender(SERVER_NAME);
+                        errorMessage.setSender(GlobalConstants.SERVER_NAME);
                 }
             }
         } catch (Exception ex) {
@@ -108,7 +108,7 @@ public class UserConnection extends Thread {
     private synchronized void notifyUserConnected() throws IOException {
         Message notify = new Message();
         notify.setMessageType(MessageType.USER_CONNECTED);
-        notify.setSender(SERVER_NAME);
+        notify.setSender(GlobalConstants.SERVER_NAME);
         notify.setContent(userName);
         messageForAll(notify);
     }
