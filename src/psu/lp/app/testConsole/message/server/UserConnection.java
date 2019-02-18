@@ -105,7 +105,7 @@ public class UserConnection extends Thread {
         }
     }
 
-    private void notifyUserConnected() throws IOException {
+    private synchronized void notifyUserConnected() throws IOException {
         Message notify = new Message();
         notify.setMessageType(MessageType.USER_CONNECTED);
         notify.setSender(SERVER_NAME);

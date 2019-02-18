@@ -36,7 +36,7 @@ public class MessageWorker extends Thread {
         }
     }
 
-    public static MessageWorker getInstance() throws IOException {
+    public synchronized static MessageWorker getInstance() throws IOException {
         if (instance == null) {
             instance = new MessageWorker(new Socket("192.168.1.33", 25565));
         }
