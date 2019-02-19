@@ -1,14 +1,17 @@
 package psu.client;
 
+import javafx.scene.control.Alert;
 import psu.entities.Message;
 import psu.entities.MessageType;
 
 import java.io.*;
+import java.net.ConnectException;
 import java.net.Socket;
 import java.util.List;
 
 import static psu.utils.GlobalConstants.PORT;
 import static psu.utils.GlobalConstants.SERVER_IP;
+import static psu.utils.Utils.showAlertMessage;
 
 public class MessageWorker extends Thread {
 
@@ -17,7 +20,7 @@ public class MessageWorker extends Thread {
 
     private static MessageWorker instance;
 
-    private static Socket clientSocket;
+    public static Socket clientSocket;
     private static String clientName;
 
     private static InputStream inputStream;
@@ -41,7 +44,11 @@ public class MessageWorker extends Thread {
 
     public synchronized static MessageWorker getInstance() throws IOException {
         if (instance == null) {
-            instance = new MessageWorker(new Socket(SERVER_IP, PORT));
+            try {
+                instance = new MessageWorker(new Socket(SERVER_IP, PORT));
+            } catch (ConnectException ex) {
+                showAlertMessage("Подключение", "Статус", "Сервер недоступен", Alert.AlertType.WARNING);
+            }
         }
         return instance;
     }
@@ -81,8 +88,8 @@ public class MessageWorker extends Thread {
                     case ERROR_CLIENT:
                         // ?
                         break;
-                        default: //whaaat
-                            System.out.println("Неизвестный тип сообщения");
+                    default: //whaaat
+                        System.out.println("Неизвестный тип сообщения");
                 }
             }
             System.out.print("lol");

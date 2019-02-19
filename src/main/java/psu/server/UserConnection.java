@@ -12,18 +12,11 @@ import java.util.Iterator;
 import java.util.List;
 
 public class UserConnection extends Thread {
-    private static HashMap<String, Socket> connectionKeeper;
+
     private static List<UserConnection> userConnections = new ArrayList<>();
 
-    public String getUserName() {
-        return userName;
-    }
-
-    public void setUserName(String userName) {
-        this.userName = userName;
-    }
-
     private String userName;
+
     private Socket userSocket;
 
     private InputStream inputStream;
@@ -31,6 +24,14 @@ public class UserConnection extends Thread {
 
     private ObjectInputStream messageInput;
     private ObjectOutputStream messageOutput;
+
+    public void setUserName(String userName) {
+        this.userName = userName;
+    }
+
+    public String getUserName() {
+        return userName;
+    }
 
     public UserConnection(Socket socket) throws IOException, ClassNotFoundException {
         userSocket = socket;
@@ -140,7 +141,7 @@ public class UserConnection extends Thread {
         for (UserConnection connection : userConnections) {
             result.add(connection.getUserName());
         }
-        
+
         return result;
     }
 }

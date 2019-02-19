@@ -7,11 +7,15 @@ import javafx.scene.control.*;
 import javafx.scene.layout.Pane;
 import javafx.stage.FileChooser;
 import psu.client.MessageWorker;
+import psu.utils.FileSender;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.List;
 
 public class FileExporterClientController {
+
+    public static File openedFile;
 
     private ObservableList<String> connectedUsers;
 
@@ -38,6 +42,11 @@ public class FileExporterClientController {
         MessageWorker.getInstance().sendMessage(filePathTextField.getText());
     }
 
+    @FXML
+    private void sendFile() {
+        FileSender.sendFile(MessageWorker.clientSocket, openedFile);
+    }
+
     public FileExporterClientController() throws IOException {
         MessageWorker.getInstance().setController(this);
         connectedUsers = FXCollections.observableArrayList();
@@ -55,7 +64,7 @@ public class FileExporterClientController {
 //        kek.showAndWait();
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("Укажите файл для отправки");
-        fileChooser.showOpenDialog(root.getScene().getWindow());
+        openedFile = fileChooser.showOpenDialog(root.getScene().getWindow());
     }
 
     public synchronized void pushToTextArea(String sender, String message) {

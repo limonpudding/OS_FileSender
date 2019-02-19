@@ -14,6 +14,8 @@ import psu.utils.GlobalConstants;
 
 import java.io.IOException;
 
+import static psu.utils.Utils.showAlertMessage;
+
 public class LoginFormController {
 
     @FXML
@@ -31,11 +33,7 @@ public class LoginFormController {
     @FXML
     private void connectToServer() throws IOException, ClassNotFoundException {
         if (MessageWorker.getInstance().tryCreateConnection(userNameField.getText()) == 1) {
-            Alert succesConnect = new Alert(Alert.AlertType.INFORMATION);
-            succesConnect.setTitle("Подключение");
-            succesConnect.setHeaderText("Статус");
-            succesConnect.setContentText("Успешно подключен");
-            succesConnect.showAndWait();
+            showAlertMessage("Подключение", "Статус", "Успешно подключен", Alert.AlertType.INFORMATION);
             createMainForm();
             FileExporterClient.loginFormStage.close();
         }
