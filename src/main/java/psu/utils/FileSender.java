@@ -1,14 +1,15 @@
 package psu.utils;
 
+import javafx.scene.control.Alert;
 import psu.client.ClientMessageWorker;
 import psu.server.UserConnection;
 
 import java.io.*;
 import java.net.Socket;
-import java.util.Arrays;
+import java.text.MessageFormat;
 
 import static psu.utils.GlobalConstants.BUF_SIZE;
-import static psu.utils.GlobalConstants.EOF_GUID;
+import static psu.utils.Utils.showAlertMessage;
 
 public class FileSender {
 
@@ -25,8 +26,8 @@ public class FileSender {
             while ((length = inputStream.read(buffer)) != -1) {
                 outputStream.write(buffer, 0, length);
             }
-            outputStream.write(EOF_GUID);
             inputStream.close();
+            showAlertMessage("Отправка файла", "Статус", GlobalConstants.SEND_FILE_SUCCESS, Alert.AlertType.INFORMATION);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -40,10 +41,9 @@ public class FileSender {
             OutputStream outputStream = toSocket.getOutputStream();
 
             int length;
-            while ((length = inputStream.read(buffer)) != -1 && !Arrays.equals(Arrays.copyOf(buffer, length), EOF_GUID)) {
+            while (isAvailable(inputStream) && (length = inputStream.read(buffer)) != -1) {
                 outputStream.write(buffer, 0, length);
             }
-            outputStream.write(EOF_GUID);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -56,13 +56,18 @@ public class FileSender {
             OutputStream outputStream = new FileOutputStream(file);
 
             int length;
-            while ((length = inputStream.read(buffer)) != -1 && !Arrays.equals(Arrays.copyOf(buffer, length), EOF_GUID)) {
+            while (isAvailable(inputStream) && (length = inputStream.read(buffer)) != -1) {
                 outputStream.write(buffer, 0, length);
             }
             outputStream.close();
+            showAlertMessage("Отправка файла", "Статус", MessageFormat.format(GlobalConstants.ACCEPT_FILE_SUCCESS, file.getName(), file.getAbsolutePath()), Alert.AlertType.INFORMATION);
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    private static boolean isAvailable(InputStream inputStream) throws IOException {
+        return inputStream.available()!=0;
     }
 
     public static Socket findSocketByUserName(String name) {

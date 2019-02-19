@@ -97,11 +97,8 @@ public class ClientMessageWorker extends Thread {
                     case NEW_FILE_REQUEST:
                         // Обработать получение файла
 
-//                        FileSender.acceptFile(new File(
-//                                MessageFormat.format(ACCEPTED_FILES_PATH, message.getContent())
-//                        ));
                         FileSender.acceptFile(new File(
-                                "G:/testSender.txt"
+                                MessageFormat.format(ACCEPTED_FILES_PATH, message.getContent())
                         ));
                         break;
                     case MESSAGE:
