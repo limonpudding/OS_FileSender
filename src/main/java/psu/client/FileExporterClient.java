@@ -12,8 +12,8 @@ public class FileExporterClient extends Application {
     public static Stage loginFormStage;
 
     @Override
-    public void start(Stage primaryStage) throws Exception {
-        loginFormStage = primaryStage;
+    public void start(Stage stage) throws Exception {
+        loginFormStage = stage;
         Parent loginForm = FXMLLoader.load(getClass().getResource(GlobalConstants.LOGIN_WINDOW_FXML));
         //Parent root = FXMLLoader.load(getClass().getResource("FileExporterTemplate.fxml"));
         loginFormStage.setTitle("Login | FileSender");
