@@ -32,7 +32,7 @@ public class LoginFormController {
 
     @FXML
     private void connectToServer() throws IOException, ClassNotFoundException {
-        if (MessageWorker.getInstance().tryCreateConnection(userNameField.getText()) == 1) {
+        if (ClientMessageWorker.getInstance().tryCreateConnection(userNameField.getText()) == 1) {
             showAlertMessage("Подключение", "Статус", "Успешно подключен", Alert.AlertType.INFORMATION);
             createMainForm();
             FileExporterClient.loginFormStage.close();

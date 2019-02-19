@@ -3,24 +3,27 @@ package psu.client;
 import javafx.scene.control.Alert;
 import psu.entities.Message;
 import psu.entities.MessageType;
+import psu.utils.FileSender;
+import psu.utils.GlobalConstants;
+import psu.utils.Utils;
 
 import java.io.*;
-import java.net.ConnectException;
 import java.net.Socket;
+import java.text.MessageFormat;
 import java.util.List;
 
-import static psu.utils.GlobalConstants.PORT;
-import static psu.utils.GlobalConstants.SERVER_IP;
+import static psu.utils.GlobalConstants.*;
+import static psu.utils.Utils.createNewMessage;
 import static psu.utils.Utils.showAlertMessage;
 
-public class MessageWorker extends Thread {
+public class ClientMessageWorker extends Thread {
 
     private FileExporterClientController controller;
     private final static String SERVER_NAME = "SERVER_HOST";
 
-    private static MessageWorker instance;
+    private static ClientMessageWorker instance;
 
-    public static Socket clientSocket;
+    private static Socket clientSocket;
     private static String clientName;
 
     private static InputStream inputStream;
@@ -29,7 +32,19 @@ public class MessageWorker extends Thread {
     private static ObjectInputStream messageInput;
     private static ObjectOutputStream messageOutput;
 
-    private MessageWorker(Socket socket) {
+    public static Socket getClientSocket() {
+        return clientSocket;
+    }
+
+    public static ObjectInputStream getMessageInput() {
+        return messageInput;
+    }
+
+    public static ObjectOutputStream getMessageOutput() {
+        return messageOutput;
+    }
+
+    private ClientMessageWorker(Socket socket) {
         try {
             clientSocket = socket;
             //clientName = name;
@@ -42,11 +57,11 @@ public class MessageWorker extends Thread {
         }
     }
 
-    public synchronized static MessageWorker getInstance() throws IOException {
+    public synchronized static ClientMessageWorker getInstance(){
         if (instance == null) {
             try {
-                instance = new MessageWorker(new Socket(SERVER_IP, PORT));
-            } catch (ConnectException ex) {
+                instance = new ClientMessageWorker(new Socket(SERVER_IP, PORT));
+            } catch (IOException ex) {
                 showAlertMessage("Подключение", "Статус", "Сервер недоступен", Alert.AlertType.WARNING);
             }
         }
@@ -57,13 +72,14 @@ public class MessageWorker extends Thread {
     public void run() {
         try {
             // TODO не очевидно зачем это нужно, возможно стоит подумать о том,
-            //  как это можно переделать (про работу и создание MessageWorker'а в целом)
+            //  как это можно переделать (про работу и создание ClientMessageWorker'а в целом)
             //  P.S. я уже и сам забыл, зачем это нужно
             while (controller == null) {
                 Thread.sleep(2000);
             }
             while (clientSocket.isConnected()) {
                 Message message = (Message) messageInput.readObject();
+                System.out.println("Пришёл MessageType: "+message.getMessageType().name());
                 switch (message.getMessageType()) {
 //                    case AUTH:
 //                        // Пришел ответ на попытку подключения
@@ -80,6 +96,13 @@ public class MessageWorker extends Thread {
                         break;
                     case NEW_FILE_REQUEST:
                         // Обработать получение файла
+
+//                        FileSender.acceptFile(new File(
+//                                MessageFormat.format(ACCEPTED_FILES_PATH, message.getContent())
+//                        ));
+                        FileSender.acceptFile(new File(
+                                "G:/testSender.txt"
+                        ));
                         break;
                     case MESSAGE:
                         // Обработать полученное сообщение
@@ -129,17 +152,31 @@ public class MessageWorker extends Thread {
         this.controller = controller;
     }
 
-    public static void sendFile() {
-
+    public void sendFileNotification(){
+        Message notification = createNewMessage();
+        notification.setMessageType(MessageType.NEW_FILE_REQUEST);
+        notification.setSender(clientName);
+        notification.setContent(FileExporterClientController.openedFile.getName());
+        notification.setRecipient(FileExporterClientController.selectedUser.toString());
+        try {
+            messageOutput.writeObject(notification);
+            messageOutput.flush();
+        } catch (IOException e) {
+            e.printStackTrace();//сделать норм обрбоотку
+        }
     }
 
-    public void sendMessage(String message) throws IOException {
-        Message authMessage = new Message();
+    public void sendMessage(String message) {
+        Message authMessage = createNewMessage();
         authMessage.setMessageType(MessageType.NEW_FILE_REQUEST);
         authMessage.setSender(clientName);
         authMessage.setContent(message);
         authMessage.setRecipient(SERVER_NAME);
-        messageOutput.writeObject(authMessage);
-        messageOutput.flush();
+        try {
+            messageOutput.writeObject(authMessage);
+            messageOutput.flush();
+        } catch (IOException e) {
+            e.printStackTrace();//сделать норм обрбоотку
+        }
     }
 }

@@ -1,6 +1,7 @@
 package psu.client;
 
 import javafx.application.Application;
+import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -13,6 +14,7 @@ public class FileExporterClient extends Application {
 
     @Override
     public void start(Stage stage) throws Exception {
+        Platform.setImplicitExit(false);
         loginFormStage = stage;
         Parent loginForm = FXMLLoader.load(getClass().getResource(GlobalConstants.LOGIN_WINDOW_FXML));
         //Parent root = FXMLLoader.load(getClass().getResource("FileExporterTemplate.fxml"));

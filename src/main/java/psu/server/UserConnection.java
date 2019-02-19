@@ -2,12 +2,13 @@ package psu.server;
 
 import psu.entities.Message;
 import psu.entities.MessageType;
+import psu.utils.FileSender;
 import psu.utils.GlobalConstants;
+import psu.utils.Utils;
 
 import java.io.*;
 import java.net.Socket;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 
@@ -33,6 +34,14 @@ public class UserConnection extends Thread {
         return userName;
     }
 
+    public Socket getUserSocket() {
+        return userSocket;
+    }
+
+    public static List<UserConnection> getUserConnections() {
+        return userConnections;
+    }
+
     public UserConnection(Socket socket) throws IOException, ClassNotFoundException {
         userSocket = socket;
 
@@ -49,7 +58,7 @@ public class UserConnection extends Thread {
             //connectionKeeper.put(userName, userSocket);
             userConnections.add(this);
 
-            Message authResponce = createNewMessage();
+            Message authResponce = Utils.createNewMessage();
             authResponce.setMessageType(MessageType.AUTH);
             authResponce.setSender(GlobalConstants.SERVER_NAME);
             authResponce.setContent("success");
@@ -79,10 +88,17 @@ public class UserConnection extends Thread {
                     case NEW_FILE_REQUEST:
                         System.out.println("попытка отправки файла");
                         // попытка отправки файла
+                        messageForSend = Utils.createNewMessage();
+                        messageForSend.setMessageType(MessageType.NEW_FILE_REQUEST);
+                        messageForSend.setRecipient(acceptedMessage.getRecipient());
+                        messageForSend.setSender(acceptedMessage.getSender());
+                        messageForSend.setContent(acceptedMessage.getContent());
+                        Utils.putInOutStreamToUser(messageForSend, acceptedMessage.getRecipient());
 
+                        FileSender.redirectFile(acceptedMessage.getSender(), acceptedMessage.getRecipient());
                         break;
                     case MESSAGE:
-                        messageForSend = createNewMessage();
+                        messageForSend = Utils.createNewMessage();
                         messageForSend.setMessageType(MessageType.MESSAGE);
                         messageForSend.setSender(acceptedMessage.getSender());
                         messageForSend.setContent(acceptedMessage.getContent() + "\n");
@@ -96,7 +112,7 @@ public class UserConnection extends Thread {
                         break;
                     default:
                         System.out.println("Неверный тип сообщения");
-                        Message errorMessage = createNewMessage();
+                        Message errorMessage = Utils.createNewMessage();
                         errorMessage.setMessageType(MessageType.ERROR_SERVER);
                         errorMessage.setContent("Произошла ошибка, данные, полученные сервером, не прошли проверку.");
                         errorMessage.setSender(GlobalConstants.SERVER_NAME);
@@ -105,10 +121,6 @@ public class UserConnection extends Thread {
         } catch (Exception ex) {
 
         }
-    }
-
-    private Message createNewMessage() {
-        return new Message();
     }
 
     private synchronized void messageForAll(Message sendTestMessage) throws IOException {
@@ -122,7 +134,7 @@ public class UserConnection extends Thread {
     }
 
     private synchronized void notifyUserConnected() throws IOException {
-        Message messageForSend = createNewMessage();
+        Message messageForSend = Utils.createNewMessage();
         messageForSend.setMessageType(MessageType.USER_CONNECTED);
         messageForSend.setSender(GlobalConstants.SERVER_NAME);
         messageForSend.setContent(getUserName());
@@ -132,7 +144,7 @@ public class UserConnection extends Thread {
         messageForAll(messageForSend);
     }
 
-    private ObjectOutputStream getMessageOutput() {
+    public ObjectOutputStream getMessageOutput() {
         return messageOutput;
     }
 

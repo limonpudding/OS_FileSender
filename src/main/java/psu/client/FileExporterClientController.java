@@ -8,7 +8,6 @@ import javafx.scene.layout.Pane;
 import javafx.stage.FileChooser;
 import psu.utils.FileSender;
 import psu.utils.GlobalConstants;
-import psu.utils.Utils;
 
 import java.io.File;
 import java.io.IOException;
@@ -20,9 +19,11 @@ import static psu.utils.Utils.showAlertMessage;
 
 public class FileExporterClientController {
 
+    public static Object selectedUser;
+
     public static File openedFile;
 
-    private ObservableList<String> connectedUsers;
+    public static ObservableList<String> connectedUsers;
 
     @FXML
     private Button fileDialogButton;
@@ -50,30 +51,29 @@ public class FileExporterClientController {
 
     @FXML
     private void sendMessage() throws IOException {
-        MessageWorker.getInstance().sendMessage(filePathTextField.getText());
+        ClientMessageWorker.getInstance().sendMessage(filePathTextField.getText());
     }
 
     @FXML
     private void sendFile() {
-        Object selectedUser = usersList.getSelectionModel().getSelectedItem();
+        selectedUser = usersList.getSelectionModel().getSelectedItem();
 
-        if (selectedUser==null){
+        if (selectedUser == null) {
             showAlertMessage("Отправка файла", "Статус", "Не выбран получатель файла", Alert.AlertType.ERROR);
             return;
         }
 
-        if (openedFile==null){
+        if (openedFile == null) {
             showAlertMessage("Отправка файла", "Статус", "Не выбран файл", Alert.AlertType.ERROR);
             return;
         }
 
-        if (selectedUser !=null){
-            FileSender.sendFile(selectedUser.toString(), openedFile);
-        }
+        ClientMessageWorker.getInstance().sendFileNotification();
+        FileSender.sendFile(openedFile);
     }
 
     public FileExporterClientController() throws IOException {
-        MessageWorker.getInstance().setController(this);
+        ClientMessageWorker.getInstance().setController(this);
         connectedUsers = FXCollections.observableArrayList();
         usersList = new ListView<String>();
         usersList.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
