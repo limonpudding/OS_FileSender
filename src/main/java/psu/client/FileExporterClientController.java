@@ -6,12 +6,17 @@ import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.layout.Pane;
 import javafx.stage.FileChooser;
-import psu.client.MessageWorker;
 import psu.utils.FileSender;
+import psu.utils.GlobalConstants;
+import psu.utils.Utils;
 
 import java.io.File;
 import java.io.IOException;
+import java.text.MessageFormat;
 import java.util.List;
+
+import static psu.utils.Utils.getFileSize;
+import static psu.utils.Utils.showAlertMessage;
 
 public class FileExporterClientController {
 
@@ -32,10 +37,16 @@ public class FileExporterClientController {
     private TextArea textArea;
 
     @FXML
-    private Button sendButton;
+    private Button sendMessageButton;
+
+    @FXML
+    private Button sendFileButton;
 
     @FXML
     private ListView usersList;
+
+    @FXML
+    private Label fileSize;
 
     @FXML
     private void sendMessage() throws IOException {
@@ -44,7 +55,21 @@ public class FileExporterClientController {
 
     @FXML
     private void sendFile() {
-        FileSender.sendFile(MessageWorker.clientSocket, openedFile);
+        Object selectedUser = usersList.getSelectionModel().getSelectedItem();
+
+        if (selectedUser==null){
+            showAlertMessage("Отправка файла", "Статус", "Не выбран получатель файла", Alert.AlertType.ERROR);
+            return;
+        }
+
+        if (openedFile==null){
+            showAlertMessage("Отправка файла", "Статус", "Не выбран файл", Alert.AlertType.ERROR);
+            return;
+        }
+
+        if (selectedUser !=null){
+            FileSender.sendFile(selectedUser.toString(), openedFile);
+        }
     }
 
     public FileExporterClientController() throws IOException {
@@ -57,14 +82,13 @@ public class FileExporterClientController {
 
     @FXML
     private void openFileDialog() {
-//        Alert kek = new Alert(Alert.AlertType.INFORMATION);
-//        kek.setTitle("Тест");
-//        kek.setHeaderText("Оу маааай");
-//        kek.setContentText("Вот ето новости");
-//        kek.showAndWait();
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("Укажите файл для отправки");
         openedFile = fileChooser.showOpenDialog(root.getScene().getWindow());
+        if (openedFile != null) {
+            fileSize.setText(MessageFormat.format(GlobalConstants.FILE_SIZE_PATTERN, getFileSize(openedFile)));
+            filePathTextField.setText(openedFile.getAbsolutePath());
+        }
     }
 
     public synchronized void pushToTextArea(String sender, String message) {
