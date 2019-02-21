@@ -31,7 +31,7 @@
                </GridPane.margin></Label>
                 <Label fx:id="fileSize" text="Размер файла">
                 <GridPane.margin>
-                    <Insets left="200.0" top="10.0" />
+                    <Insets left="150.0" top="10.0" />
                 </GridPane.margin>
                 </Label>
             <TextField fx:id="filePathTextField" GridPane.rowIndex="1">

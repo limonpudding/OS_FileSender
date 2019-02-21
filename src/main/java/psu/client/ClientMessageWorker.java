@@ -16,10 +16,12 @@ import static psu.utils.GlobalConstants.*;
 import static psu.utils.Utils.createNewMessage;
 import static psu.utils.Utils.showAlertMessage;
 
-public class ClientMessageWorker extends Thread {
+public class ClientMessageWorker implements Runnable {
 
     private FileExporterClientController controller;
     private final static String SERVER_NAME = "SERVER_HOST";
+
+    public static Thread clientMessager;
 
     private static ClientMessageWorker instance;
 
@@ -71,12 +73,6 @@ public class ClientMessageWorker extends Thread {
     @Override
     public void run() {
         try {
-            // TODO не очевидно зачем это нужно, возможно стоит подумать о том,
-            //  как это можно переделать (про работу и создание ClientMessageWorker'а в целом)
-            //  P.S. я уже и сам забыл, зачем это нужно
-            while (controller == null) {
-                Thread.sleep(2000);
-            }
             while (clientSocket.isConnected()) {
                 Message message = (Message) messageInput.readObject();
                 System.out.println("Пришёл MessageType: "+message.getMessageType().name());
@@ -136,7 +132,6 @@ public class ClientMessageWorker extends Thread {
         if (answer.getMessageType() == MessageType.AUTH
                 && answer.getSender().equals(SERVER_NAME)) {
             if (answer.getContent().equals("success")) {
-                start();
                 return 1;
             } else {
                 return 0;

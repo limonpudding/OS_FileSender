@@ -73,11 +73,11 @@ public class FileExporterClientController {
     }
 
     public FileExporterClientController() throws IOException {
-        ClientMessageWorker.getInstance().setController(this);
         connectedUsers = FXCollections.observableArrayList();
         usersList = new ListView<String>();
         usersList.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
         usersList.setItems(connectedUsers);
+        ClientMessageWorker.getInstance().setController(this);
     }
 
     @FXML

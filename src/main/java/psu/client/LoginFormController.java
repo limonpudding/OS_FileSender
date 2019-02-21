@@ -13,7 +13,9 @@ import javafx.stage.Stage;
 import psu.utils.GlobalConstants;
 
 import java.io.IOException;
+import java.text.MessageFormat;
 
+import static psu.client.ClientMessageWorker.clientMessager;
 import static psu.utils.Utils.showAlertMessage;
 
 public class LoginFormController {
@@ -36,15 +38,17 @@ public class LoginFormController {
             showAlertMessage("Подключение", "Статус", "Успешно подключен", Alert.AlertType.INFORMATION);
             createMainForm();
             FileExporterClient.loginFormStage.close();
+            clientMessager = new Thread(ClientMessageWorker.getInstance());
+            clientMessager.start();
         }
     }
 
-    private void createMainForm(){
+    private void createMainForm() {
         Pane mainWindow = getMainFormResource();
         Scene mainScene = new Scene(mainWindow, 700, 400);
         Stage stage = new Stage();
         stage.setScene(mainScene);
-        stage.setTitle("Main File Sender Windows");
+        stage.setTitle(MessageFormat.format(GlobalConstants.FILE_SENDER_TITLE, userNameField.getText()));
         stage.show();
     }
 
