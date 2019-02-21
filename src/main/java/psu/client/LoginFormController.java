@@ -10,6 +10,7 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
+import psu.entities.ConnectionResult;
 import psu.utils.GlobalConstants;
 
 import java.io.IOException;
@@ -34,12 +35,23 @@ public class LoginFormController {
 
     @FXML
     private void connectToServer() throws IOException, ClassNotFoundException {
-        if (ClientMessageWorker.getInstance().tryCreateConnection(userNameField.getText()) == 1) {
-            showAlertMessage("Подключение", "Статус", "Успешно подключен", Alert.AlertType.INFORMATION);
-            createMainForm();
-            FileExporterClient.loginFormStage.close();
-            clientMessager = new Thread(ClientMessageWorker.getInstance());
-            clientMessager.start();
+        ConnectionResult connectionResult = ClientMessageWorker.getInstance().tryCreateConnection(userNameField.getText());
+        switch (connectionResult) {
+            case SUCCESS:
+                showAlertMessage("Подключение", "Статус", "Успешно подключен", Alert.AlertType.INFORMATION);
+                createMainForm();
+                FileExporterClient.loginFormStage.close();
+                clientMessager = new Thread(ClientMessageWorker.getInstance());
+                clientMessager.start();
+                break;
+            case USERNAME_NOT_AVAILABLE:
+                showAlertMessage("Подключение", "Статус", "Это имя занято, попробуйте другое", Alert.AlertType.WARNING);
+                break;
+            case ERROR:
+                showAlertMessage("Подключение", "Статус", "Неизвестная ошибка", Alert.AlertType.ERROR);
+                break;
+            default:
+                throw new RuntimeException("Неизвестный тип сообщения при попытке подключения к серверу");
         }
     }
 

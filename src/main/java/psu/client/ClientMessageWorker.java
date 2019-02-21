@@ -1,6 +1,7 @@
 package psu.client;
 
 import javafx.scene.control.Alert;
+import psu.entities.ConnectionResult;
 import psu.entities.Message;
 import psu.entities.MessageType;
 import psu.utils.FileSender;
@@ -114,11 +115,7 @@ public class ClientMessageWorker implements Runnable {
         }
     }
 
-    /** Метод для авторизации на сервере
-     *
-     * @return 1 - успешно, 0 - ник занят, -1 что-то пошло не так
-     */
-    public int tryCreateConnection(String name) throws IOException, ClassNotFoundException {
+    public ConnectionResult tryCreateConnection(String name) throws IOException, ClassNotFoundException {
         clientName = name;
 
         Message authMessage = new Message();
@@ -131,13 +128,13 @@ public class ClientMessageWorker implements Runnable {
         Message answer = (Message) messageInput.readObject();
         if (answer.getMessageType() == MessageType.AUTH
                 && answer.getSender().equals(SERVER_NAME)) {
-            if (answer.getContent().equals("success")) {
-                return 1;
+            if (answer.getAttachment().equals(ConnectionResult.SUCCESS)) {
+                return ConnectionResult.SUCCESS;
             } else {
-                return 0;
+                return ConnectionResult.USERNAME_NOT_AVAILABLE;
             }
         }
-        return -1;
+        return ConnectionResult.ERROR;
     }
 
     public void setController(FileExporterClientController controller) {

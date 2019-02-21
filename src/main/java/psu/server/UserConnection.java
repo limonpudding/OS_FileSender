@@ -1,5 +1,6 @@
 package psu.server;
 
+import psu.entities.ConnectionResult;
 import psu.entities.Message;
 import psu.entities.MessageType;
 import psu.utils.FileSender;
@@ -12,9 +13,11 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-public class UserConnection extends Thread {
+public class UserConnection implements Runnable {
 
     private static List<UserConnection> userConnections = new ArrayList<>();
+
+    private ConnectionResult connectionResult = ConnectionResult.NONE;
 
     private String userName;
 
@@ -28,6 +31,10 @@ public class UserConnection extends Thread {
 
     public void setUserName(String userName) {
         this.userName = userName;
+    }
+
+    public ConnectionResult getConnectionResult() {
+        return connectionResult;
     }
 
     public String getUserName() {
@@ -54,33 +61,31 @@ public class UserConnection extends Thread {
 
         Message authRequest = (Message) messageInput.readObject();
         if (authRequest.getMessageType() == MessageType.AUTH) {
+            Message authResponse = Utils.createNewMessage();
+            authResponse.setMessageType(MessageType.AUTH);
+            authResponse.setSender(GlobalConstants.SERVER_NAME);
             setUserName(authRequest.getSender());
-            //connectionKeeper.put(userName, userSocket);
-            userConnections.add(this);
 
-            Message authResponce = Utils.createNewMessage();
-            authResponce.setMessageType(MessageType.AUTH);
-            authResponce.setSender(GlobalConstants.SERVER_NAME);
-            authResponce.setContent("success");
-            authResponce.setRecipient(getUserName());
-            messageOutput.writeObject(authResponce);
+            if (isExistUsername(authRequest.getSender())
+                    || GlobalConstants.SERVER_NAME.equals(authRequest.getSender())){
+                connectionResult = ConnectionResult.USERNAME_NOT_AVAILABLE;
+            } else {
+                userConnections.add(this);
+                connectionResult = ConnectionResult.SUCCESS;
+            }
+            authResponse.setAttachment(connectionResult);
+            messageOutput.writeObject(authResponse);
             messageOutput.flush();
 
-            notifyUserConnected();
+            if (authResponse.getAttachment().equals(ConnectionResult.SUCCESS)) {
+                notifyUserConnected();
+            }
         }
     }
 
     @Override
     public void run() {
         try {
-
-
-            //Message tryAuth = (Message) messageInput.readObject();
-            //проверка уникальности имени
-            //первое сообщение всегда должно быть типа AUTH --> в content лежит имя клиента
-            //userName = tryAuth.getContent();
-
-            //System.out.println(tryAuth.getMessageType().getInfo() + " пользователя с ником " + tryAuth.getContent());
             while (userSocket.isConnected()) {
                 Message acceptedMessage = (Message) messageInput.readObject();
                 Message messageForSend;
@@ -119,15 +124,14 @@ public class UserConnection extends Thread {
                 }
             }
         } catch (Exception ex) {
-
+            ex.printStackTrace();
+            throw new RuntimeException("Сервер упал при ответе на какое-то сообщение");
         }
     }
 
     private synchronized void messageForAll(Message sendTestMessage) throws IOException {
-        Iterator users = userConnections.listIterator();
-        while (users.hasNext()) {
-            UserConnection currentUserConnection = (UserConnection) users.next();
-            sendTestMessage.setRecipient(currentUserConnection.getName());
+        for (UserConnection currentUserConnection : userConnections) {
+            sendTestMessage.setRecipient(currentUserConnection.getUserName());
             currentUserConnection.getMessageOutput().writeObject(sendTestMessage);
             currentUserConnection.getMessageOutput().flush();
         }
@@ -155,5 +159,14 @@ public class UserConnection extends Thread {
         }
 
         return result;
+    }
+
+    boolean isExistUsername(String userName){
+        for (UserConnection userConnection:userConnections) {
+            if (userConnection.getUserName().equals(userName)){
+                return true;
+            }
+        }
+        return false;
     }
 }
