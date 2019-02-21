@@ -89,10 +89,9 @@ public class UserConnection implements Runnable {
             while (userSocket.isConnected()) {
                 Message acceptedMessage = (Message) messageInput.readObject();
                 Message messageForSend;
+                System.out.println(acceptedMessage.getMessageType());
                 switch (acceptedMessage.getMessageType()) {
                     case NEW_FILE_REQUEST:
-                        System.out.println("попытка отправки файла");
-                        // попытка отправки файла
                         messageForSend = Utils.createNewMessage();
                         messageForSend.setMessageType(MessageType.NEW_FILE_REQUEST);
                         messageForSend.setRecipient(acceptedMessage.getRecipient());

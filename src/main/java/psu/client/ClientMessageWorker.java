@@ -47,28 +47,50 @@ public class ClientMessageWorker implements Runnable {
         return messageOutput;
     }
 
-    private ClientMessageWorker(Socket socket) {
+    private ClientMessageWorker() {
+    }
+
+    public synchronized static ClientMessageWorker getInstance(){
+        if (instance == null) {
+            instance = new ClientMessageWorker();
+        }
+        return instance;
+    }
+
+    public ConnectionResult tryCreateConnection(String name) throws IOException, ClassNotFoundException {
+        clientName = name;
+
+        createNewConnection();
+
+        Message authMessage = new Message();
+        authMessage.setMessageType(MessageType.AUTH);
+        authMessage.setSender(clientName);
+        authMessage.setContent(clientName);
+        authMessage.setRecipient(SERVER_NAME);
+        messageOutput.writeObject(authMessage);
+        messageOutput.flush();
+        Message answer = (Message) messageInput.readObject();
+        if (answer.getMessageType() == MessageType.AUTH
+                && answer.getSender().equals(SERVER_NAME)) {
+            if (answer.getAttachment().equals(ConnectionResult.SUCCESS)) {
+                return ConnectionResult.SUCCESS;
+            } else {
+                return ConnectionResult.USERNAME_NOT_AVAILABLE;
+            }
+        }
+        return ConnectionResult.ERROR;
+    }
+
+    private void createNewConnection() {
         try {
-            clientSocket = socket;
-            //clientName = name;
+            clientSocket = new Socket(SERVER_IP, PORT);
             outputStream = clientSocket.getOutputStream();
             messageOutput = new ObjectOutputStream(outputStream);
             inputStream = clientSocket.getInputStream();
             messageInput = new ObjectInputStream(inputStream);
         } catch (Exception ex) {
-
+            showAlertMessage("Подключение", "Статус", "Сервер недоступен", Alert.AlertType.WARNING);
         }
-    }
-
-    public synchronized static ClientMessageWorker getInstance(){
-        if (instance == null) {
-            try {
-                instance = new ClientMessageWorker(new Socket(SERVER_IP, PORT));
-            } catch (IOException ex) {
-                showAlertMessage("Подключение", "Статус", "Сервер недоступен", Alert.AlertType.WARNING);
-            }
-        }
-        return instance;
     }
 
     @Override
@@ -113,28 +135,6 @@ public class ClientMessageWorker implements Runnable {
         } catch(Exception ex) {
             ex.printStackTrace();
         }
-    }
-
-    public ConnectionResult tryCreateConnection(String name) throws IOException, ClassNotFoundException {
-        clientName = name;
-
-        Message authMessage = new Message();
-        authMessage.setMessageType(MessageType.AUTH);
-        authMessage.setSender(clientName);
-        authMessage.setContent(clientName);
-        authMessage.setRecipient(SERVER_NAME);
-        messageOutput.writeObject(authMessage);
-        messageOutput.flush();
-        Message answer = (Message) messageInput.readObject();
-        if (answer.getMessageType() == MessageType.AUTH
-                && answer.getSender().equals(SERVER_NAME)) {
-            if (answer.getAttachment().equals(ConnectionResult.SUCCESS)) {
-                return ConnectionResult.SUCCESS;
-            } else {
-                return ConnectionResult.USERNAME_NOT_AVAILABLE;
-            }
-        }
-        return ConnectionResult.ERROR;
     }
 
     public void setController(FileExporterClientController controller) {

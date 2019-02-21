@@ -67,7 +67,20 @@ public class FileSender {
     }
 
     private static boolean isAvailable(InputStream inputStream) throws IOException {
-        return inputStream.available()!=0;
+        if (inputStream.available()!=0){
+            return true;
+        }
+        try {//даём время подойти отстающим в поток считывания
+            for (int i=0;i<100;++i) {
+                Thread.sleep(1);
+                if (inputStream.available()!=0){
+                    return true;
+                }
+            }
+        } catch (InterruptedException e) {
+            throw new RuntimeException("При проверке на авайлабл поток неожиданно проснулся");
+        }
+        return inputStream.available() != 0;
     }
 
     public static Socket findSocketByUserName(String name) {

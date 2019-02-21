@@ -1,5 +1,6 @@
 package psu.client;
 
+import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -102,7 +103,7 @@ public class FileExporterClientController {
     }
 
     public synchronized void setUsersList(List<String> users) {
-        connectedUsers.setAll(users);
+        Platform.runLater(() -> connectedUsers.setAll(users));
         usersList.setItems(connectedUsers);
     }
 }
