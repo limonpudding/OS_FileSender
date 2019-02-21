@@ -71,7 +71,7 @@ public class FileSender {
             return true;
         }
         try {//даём время подойти отстающим в поток считывания
-            for (int i=0;i<100;++i) {
+            for (int i = 0; i< GlobalConstants.TIMEOUT; ++i) {
                 Thread.sleep(1);
                 if (inputStream.available()!=0){
                     return true;
