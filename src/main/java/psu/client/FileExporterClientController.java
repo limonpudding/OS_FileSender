@@ -51,8 +51,12 @@ public class FileExporterClientController {
     private Label fileSize;
 
     @FXML
+    private TextField userMessageField;
+
+    @FXML
     private void sendMessage() {
-        ClientMessageWorker.getInstance().sendMessage(filePathTextField.getText());
+        ClientMessageWorker.getInstance().sendMessage(userMessageField.getText());
+        userMessageField.clear();
     }
 
     @FXML
