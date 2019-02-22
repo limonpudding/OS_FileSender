@@ -48,7 +48,7 @@ public class ClientMessageWorker implements Runnable {
     private ClientMessageWorker() {
     }
 
-    public synchronized static ClientMessageWorker getInstance(){
+    public synchronized static ClientMessageWorker getInstance() {
         if (instance == null) {
             instance = new ClientMessageWorker();
         }
@@ -96,7 +96,7 @@ public class ClientMessageWorker implements Runnable {
         try {
             while (clientSocket.isConnected()) {
                 Message message = (Message) messageInput.readObject();
-                System.out.println("Пришёл MessageType: "+message.getMessageType().name());
+                System.out.println("Пришёл MessageType: " + message.getMessageType().name());
                 switch (message.getMessageType()) {
 //                    case AUTH:
 //                        // Пришел ответ на попытку подключения
@@ -113,11 +113,9 @@ public class ClientMessageWorker implements Runnable {
                         // Обработать ошибку с сервера
                         break;
                     case NEW_FILE_REQUEST:
-                        // Обработать получение файла
-
-                        FileSender.acceptFile(new File(
-                                MessageFormat.format(ACCEPTED_FILES_PATH, message.getContent())
-                        ));
+                        FileSender.acceptFile(
+                                new File(FileExporterClientController.destinationFolder + "/" + message.getContent())
+                        );
                         break;
                     case MESSAGE:
                         // Обработать полученное сообщение
@@ -131,7 +129,7 @@ public class ClientMessageWorker implements Runnable {
                 }
             }
             System.out.print("lol");
-        } catch(Exception ex) {
+        } catch (Exception ex) {
             ex.printStackTrace();
         }
     }
@@ -140,7 +138,7 @@ public class ClientMessageWorker implements Runnable {
         this.controller = controller;
     }
 
-    public void sendFileNotification(){
+    public void sendFileNotification() {
         Message notification = createNewMessage(MessageType.NEW_FILE_REQUEST);
         notification.setSender(clientName);
         notification.setContent(FileExporterClientController.openedFile.getName());

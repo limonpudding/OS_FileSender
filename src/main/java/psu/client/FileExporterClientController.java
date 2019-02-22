@@ -3,12 +3,15 @@ package psu.client;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.layout.Pane;
+import javafx.stage.DirectoryChooser;
 import javafx.stage.FileChooser;
 import psu.utils.FileSender;
 import psu.utils.GlobalConstants;
+import psu.utils.Utils;
 
 import java.io.File;
 import java.io.IOException;
@@ -19,6 +22,8 @@ import static psu.utils.Utils.getFileSize;
 import static psu.utils.Utils.showAlertMessage;
 
 public class FileExporterClientController {
+
+    public static String destinationFolder = "C:/";
 
     public static Object selectedUser;
 
@@ -93,6 +98,18 @@ public class FileExporterClientController {
         if (openedFile != null) {
             fileSize.setText(MessageFormat.format(GlobalConstants.FILE_SIZE_PATTERN, getFileSize(openedFile)));
             filePathTextField.setText(openedFile.getAbsolutePath());
+        }
+    }
+
+
+    @FXML
+    private void fileFolder() {
+        DirectoryChooser directoryChooser = new DirectoryChooser();
+        directoryChooser.setTitle("Укажите папку принятия файлов");
+        openedFile = directoryChooser.showDialog(root.getScene().getWindow());
+        if (openedFile != null) {
+            destinationFolder = openedFile.getAbsolutePath();
+            Utils.showAlertMessage("Принятые файлы", "Статус", "Выбран путь, куда принять файл: ''" + destinationFolder + "''", Alert.AlertType.INFORMATION);
         }
     }
 
