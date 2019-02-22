@@ -5,8 +5,6 @@ import psu.entities.ConnectionResult;
 import psu.entities.Message;
 import psu.entities.MessageType;
 import psu.utils.FileSender;
-import psu.utils.GlobalConstants;
-import psu.utils.Utils;
 
 import java.io.*;
 import java.net.Socket;
@@ -109,6 +107,7 @@ public class ClientMessageWorker implements Runnable {
                         break;
                     case USER_DISCONNECTED:
                         // Обновить список пользователей
+                        controller.setUsersList((List<String>) message.getAttachment());
                         break;
                     case ERROR_SERVER:
                         // Обработать ошибку с сервера
@@ -142,8 +141,7 @@ public class ClientMessageWorker implements Runnable {
     }
 
     public void sendFileNotification(){
-        Message notification = createNewMessage();
-        notification.setMessageType(MessageType.NEW_FILE_REQUEST);
+        Message notification = createNewMessage(MessageType.NEW_FILE_REQUEST);
         notification.setSender(clientName);
         notification.setContent(FileExporterClientController.openedFile.getName());
         notification.setRecipient(FileExporterClientController.selectedUser.toString());
@@ -156,8 +154,7 @@ public class ClientMessageWorker implements Runnable {
     }
 
     public void sendMessage(String message) {
-        Message authMessage = createNewMessage();
-        authMessage.setMessageType(MessageType.NEW_FILE_REQUEST);
+        Message authMessage = createNewMessage(MessageType.MESSAGE);
         authMessage.setSender(clientName);
         authMessage.setContent(message);
         authMessage.setRecipient(SERVER_NAME);

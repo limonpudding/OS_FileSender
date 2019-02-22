@@ -9,6 +9,13 @@ public class Message implements Serializable {
     private String recipient;
     private Object attachment;
 
+    public Message() {
+    }
+
+    public Message(MessageType messageType) {
+        this.messageType = messageType;
+    }
+
     public MessageType getMessageType() {
         return messageType;
     }

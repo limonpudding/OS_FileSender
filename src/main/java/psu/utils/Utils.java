@@ -2,14 +2,12 @@ package psu.utils;
 
 import javafx.application.Platform;
 import javafx.scene.control.Alert;
-import psu.client.ClientMessageWorker;
 import psu.entities.Message;
+import psu.entities.MessageType;
 import psu.server.UserConnection;
 
 import java.io.File;
 import java.io.IOException;
-import java.io.ObjectOutputStream;
-import java.net.Socket;
 
 public class Utils {
     public static void showAlertMessage(String title, String header, String text, Alert.AlertType type) {
@@ -26,8 +24,8 @@ public class Utils {
         return String.valueOf(file.length());
     }
 
-    public static Message createNewMessage() {
-        return new Message();
+    public static Message createNewMessage(MessageType messageType) {
+        return new Message(messageType);
     }
 
     public static void putInOutStreamToUser(Message authMessage, String user) {

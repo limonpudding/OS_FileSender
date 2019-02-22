@@ -51,7 +51,7 @@ public class FileExporterClientController {
     private Label fileSize;
 
     @FXML
-    private void sendMessage() throws IOException {
+    private void sendMessage() {
         ClientMessageWorker.getInstance().sendMessage(filePathTextField.getText());
     }
 
@@ -93,7 +93,7 @@ public class FileExporterClientController {
     }
 
     public synchronized void pushToTextArea(String sender, String message) {
-        textArea.appendText(sender + ": " + message);
+        textArea.appendText(sender + ": " + message + "\n");
     }
 
     public synchronized void addUserToListView(String name) {

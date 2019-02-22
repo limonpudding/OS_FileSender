@@ -9,8 +9,8 @@ import psu.utils.Utils;
 
 import java.io.*;
 import java.net.Socket;
+import java.text.MessageFormat;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 public class UserConnection implements Runnable {
@@ -61,13 +61,12 @@ public class UserConnection implements Runnable {
 
         Message authRequest = (Message) messageInput.readObject();
         if (authRequest.getMessageType() == MessageType.AUTH) {
-            Message authResponse = Utils.createNewMessage();
-            authResponse.setMessageType(MessageType.AUTH);
+            Message authResponse = Utils.createNewMessage(MessageType.AUTH);
             authResponse.setSender(GlobalConstants.SERVER_NAME);
             setUserName(authRequest.getSender());
 
             if (isExistUsername(authRequest.getSender())
-                    || GlobalConstants.SERVER_NAME.equals(authRequest.getSender())){
+                    || GlobalConstants.SERVER_NAME.equals(authRequest.getSender())) {
                 connectionResult = ConnectionResult.USERNAME_NOT_AVAILABLE;
             } else {
                 userConnections.add(this);
@@ -92,8 +91,7 @@ public class UserConnection implements Runnable {
                 System.out.println(acceptedMessage.getMessageType());
                 switch (acceptedMessage.getMessageType()) {
                     case NEW_FILE_REQUEST:
-                        messageForSend = Utils.createNewMessage();
-                        messageForSend.setMessageType(MessageType.NEW_FILE_REQUEST);
+                        messageForSend = Utils.createNewMessage(MessageType.NEW_FILE_REQUEST);
                         messageForSend.setRecipient(acceptedMessage.getRecipient());
                         messageForSend.setSender(acceptedMessage.getSender());
                         messageForSend.setContent(acceptedMessage.getContent());
@@ -102,10 +100,9 @@ public class UserConnection implements Runnable {
                         FileSender.redirectFile(acceptedMessage.getSender(), acceptedMessage.getRecipient());
                         break;
                     case MESSAGE:
-                        messageForSend = Utils.createNewMessage();
-                        messageForSend.setMessageType(MessageType.MESSAGE);
+                        messageForSend = Utils.createNewMessage(MessageType.MESSAGE);
                         messageForSend.setSender(acceptedMessage.getSender());
-                        messageForSend.setContent(acceptedMessage.getContent() + "\n");
+                        messageForSend.setContent(acceptedMessage.getContent());
 
                         //для всех клиентов
                         messageForAll(messageForSend);
@@ -114,31 +111,50 @@ public class UserConnection implements Runnable {
                         break;
                     case USER_CONNECTED:
                         break;
+                    case USER_DISCONNECTED:
+                        break;
                     default:
                         System.out.println("Неверный тип сообщения");
-                        Message errorMessage = Utils.createNewMessage();
-                        errorMessage.setMessageType(MessageType.ERROR_SERVER);
+                        Message errorMessage = Utils.createNewMessage(MessageType.ERROR_SERVER);
                         errorMessage.setContent("Произошла ошибка, данные, полученные сервером, не прошли проверку.");
                         errorMessage.setSender(GlobalConstants.SERVER_NAME);
                 }
             }
         } catch (Exception ex) {
-            ex.printStackTrace();
-            throw new RuntimeException("Сервер упал при ответе на какое-то сообщение");
+            deleteThisConnection();
+            System.out.println(MessageFormat.format(GlobalConstants.CONNECTION_LOST, userName));
         }
     }
 
-    private synchronized void messageForAll(Message sendTestMessage) throws IOException {
-        for (UserConnection currentUserConnection : userConnections) {
-            sendTestMessage.setRecipient(currentUserConnection.getUserName());
-            currentUserConnection.getMessageOutput().writeObject(sendTestMessage);
-            currentUserConnection.getMessageOutput().flush();
+    private synchronized void deleteUserConnectionByUsername(String userName) {
+        if (!userConnections.removeIf(userConnection -> userConnection.getUserName().equals(userName))) {
+            throw new RuntimeException("Пользователь с таким именем не найтен");
+        }
+        Message message = Utils.createNewMessage(MessageType.USER_DISCONNECTED);
+        message.setSender(GlobalConstants.SERVER_NAME);
+        message.setContent(userName);
+        message.setAttachment(createListNames());
+        messageForAll(message);
+    }
+
+    private synchronized void deleteThisConnection() {
+        deleteUserConnectionByUsername(userName);
+    }
+
+    private synchronized void messageForAll(Message sendTestMessage) {
+        for (UserConnection userConnection : userConnections) {
+            sendTestMessage.setRecipient(userConnection.getUserName());
+            try {
+                userConnection.getMessageOutput().writeObject(sendTestMessage);
+                userConnection.getMessageOutput().flush();
+            } catch (IOException e) {
+                throw new RuntimeException(MessageFormat.format(GlobalConstants.MESSAGE_SEND_ERROR, userConnection.getUserName()));
+            }
         }
     }
 
     private synchronized void notifyUserConnected() throws IOException {
-        Message messageForSend = Utils.createNewMessage();
-        messageForSend.setMessageType(MessageType.USER_CONNECTED);
+        Message messageForSend = Utils.createNewMessage(MessageType.USER_CONNECTED);
         messageForSend.setSender(GlobalConstants.SERVER_NAME);
         messageForSend.setContent(getUserName());
         messageForSend.setAttachment(createListNames());
@@ -160,9 +176,9 @@ public class UserConnection implements Runnable {
         return result;
     }
 
-    boolean isExistUsername(String userName){
-        for (UserConnection userConnection:userConnections) {
-            if (userConnection.getUserName().equals(userName)){
+    boolean isExistUsername(String userName) {
+        for (UserConnection userConnection : userConnections) {
+            if (userConnection.getUserName().equals(userName)) {
                 return true;
             }
         }
