@@ -56,9 +56,9 @@
                     <GridPane.margin>
                         <Insets />
                     </GridPane.margin></Button>
-                <Button fx:id="fileFolder" contentDisplay="CENTER" maxWidth="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#fileFolder" prefWidth="90.0" text="Куда принять" GridPane.columnIndex="0" GridPane.rowIndex="2" GridPane.halignment="RIGHT">
+                <Button fx:id="fileFolder" contentDisplay="CENTER" maxWidth="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#fileFolder" prefWidth="90.0" text="Куда принять" GridPane.columnIndex="0" GridPane.halignment="RIGHT" GridPane.rowIndex="2">
                     <GridPane.margin>
-                        <Insets />
+                        <Insets right="116.0" />
                     </GridPane.margin></Button>
             <ListView fx:id="usersList" prefHeight="200.0" prefWidth="190.0" GridPane.columnIndex="2" GridPane.rowIndex="1" GridPane.rowSpan="4">
                <GridPane.margin>
