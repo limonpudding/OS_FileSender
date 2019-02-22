@@ -65,8 +65,7 @@ public class UserConnection implements Runnable {
             authResponse.setSender(GlobalConstants.SERVER_NAME);
             setUserName(authRequest.getSender());
 
-            if (isExistUsername(authRequest.getSender())
-                    || GlobalConstants.SERVER_NAME.equals(authRequest.getSender())) {
+            if (isIncorrectUsername(authRequest)) {
                 connectionResult = ConnectionResult.USERNAME_NOT_AVAILABLE;
             } else {
                 userConnections.add(this);
@@ -80,6 +79,14 @@ public class UserConnection implements Runnable {
                 notifyUserConnected();
             }
         }
+    }
+
+    private boolean isIncorrectUsername(Message authRequest) {
+        String sender = authRequest.getSender();
+        return sender == null
+                || isExistUsername(sender)
+                || GlobalConstants.SERVER_NAME.equals(sender)
+                || sender.trim().equals("");
     }
 
     @Override

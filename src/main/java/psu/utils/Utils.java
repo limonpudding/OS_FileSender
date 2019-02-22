@@ -12,11 +12,11 @@ import java.io.IOException;
 public class Utils {
     public static void showAlertMessage(String title, String header, String text, Alert.AlertType type) {
         Platform.runLater(() -> {
-            Alert succesConnect = new Alert(type);
-            succesConnect.setTitle(title);
-            succesConnect.setHeaderText(header);
-            succesConnect.setContentText(text);
-            succesConnect.showAndWait();
+            Alert successConnect = new Alert(type);
+            successConnect.setTitle(title);
+            successConnect.setHeaderText(header);
+            successConnect.setContentText(text);
+            successConnect.showAndWait();
         });
     }
 
