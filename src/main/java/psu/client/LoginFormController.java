@@ -62,6 +62,7 @@ public class LoginFormController {
         stage.setScene(mainScene);
         stage.setTitle(MessageFormat.format(GlobalConstants.FILE_SENDER_TITLE, userNameField.getText()));
         stage.setOnCloseRequest(event -> System.exit(0));
+        stage.setResizable(false);//isResizable()
         stage.show();
     }
 

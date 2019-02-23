@@ -17,10 +17,10 @@ public class FileExporterClient extends Application {
         Platform.setImplicitExit(false);
         loginFormStage = stage;
         Parent loginForm = FXMLLoader.load(getClass().getResource(GlobalConstants.LOGIN_WINDOW_FXML));
-        //Parent root = FXMLLoader.load(getClass().getResource("FileExporterTemplate.fxml"));
-        loginFormStage.setTitle("Login | FileSender");
+        loginFormStage.setTitle("FileSender | Авторизация");
         loginFormStage.setScene(new Scene(loginForm, 300, 90));
-        //setUserAgentStylesheet(STYLESHEET_MODENA);
+        loginFormStage.setOnCloseRequest(event -> System.exit(0));
+        loginFormStage.setResizable(false);
         loginFormStage.show();
     }
 

@@ -11,7 +11,7 @@ public class GlobalConstants {
     public static final String ACCEPTED_FILES_PATH = "G:/acceptedFiles/{0}";
     public static final String SEND_FILE_SUCCESS = "Файл успешно отправлен";
     public static final String ACCEPT_FILE_SUCCESS = "Файл {0} успешно получен и доступен по пути ''{1}''";
-    public static final String FILE_SENDER_TITLE = "File Sender, user: {0}";
+    public static final String FILE_SENDER_TITLE = "FileSender | Вы вошли как: {0}";
     public static final int TIMEOUT = 500;
     public static final String CONNECTION_LOST = "Соединение с пользователем ''{0}'' утеряно";
     public static final String MESSAGE_SEND_ERROR = "Ошибка при отправке сообщения клиенту ''{0}''";

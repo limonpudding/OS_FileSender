@@ -98,9 +98,6 @@ public class ClientMessageWorker implements Runnable {
                 Message message = (Message) messageInput.readObject();
                 System.out.println("Пришёл MessageType: " + message.getMessageType().name());
                 switch (message.getMessageType()) {
-//                    case AUTH:
-//                        // Пришел ответ на попытку подключения
-//                        break;
                     case USER_CONNECTED:
                         // Обновить список пользователей
                         controller.setUsersList((List<String>) message.getAttachment());
@@ -128,7 +125,6 @@ public class ClientMessageWorker implements Runnable {
                         System.out.println("Неизвестный тип сообщения");
                 }
             }
-            System.out.print("lol");
         } catch (Exception ex) {
             ex.printStackTrace();
         }
