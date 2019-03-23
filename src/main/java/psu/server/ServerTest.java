@@ -11,6 +11,8 @@ public class ServerTest {
 
     public static void main(String[] args) {
         try (ServerSocket serverSocket = new ServerSocket(PORT)) {
+            IPSender ipSender = new IPSender();
+            ipSender.start();
             while (true) {
                 UserConnection userConnection = new UserConnection(serverSocket.accept());
                 if (userConnection.getConnectionResult() == ConnectionResult.SUCCESS){

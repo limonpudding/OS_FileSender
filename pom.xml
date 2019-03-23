@@ -6,7 +6,7 @@
 
     <groupId>psu</groupId>
     <artifactId>OS_FileSender</artifactId>
-    <version>1.0-SNAPSHOT</version>
+    <version>1.0-SNAPSHOT-server</version>
     <packaging>jar</packaging>
 
 
@@ -21,7 +21,7 @@
                 <configuration>
                     <archive>
                         <manifest>
-                            <mainClass>psu.client.FileExporterClient</mainClass>
+                            <mainClass>psu.server.ServerTest</mainClass>
                         </manifest>
                     </archive>
                 </configuration>
@@ -47,7 +47,7 @@
                     </execution>
                 </executions>
                 <configuration>
-                    <mainClass>psu.client.FileExporterClient</mainClass>
+                    <mainClass>psu.server.ServerTest</mainClass>
                 </configuration>
             </plugin>
 

@@ -7,6 +7,9 @@ import psu.entities.MessageType;
 import psu.utils.FileSender;
 
 import java.io.*;
+import java.net.DatagramPacket;
+import java.net.DatagramSocket;
+import java.net.InetAddress;
 import java.net.Socket;
 import java.text.MessageFormat;
 import java.util.List;
@@ -58,7 +61,18 @@ public class ClientMessageWorker implements Runnable {
     public ConnectionResult tryCreateConnection(String name) throws IOException, ClassNotFoundException {
         clientName = name;
 
-        createNewConnection();
+        byte[] buf = "GET_SERVER_IP".getBytes();
+        DatagramSocket udp = new DatagramSocket();
+        InetAddress address = InetAddress.getByName("localhost");
+        DatagramPacket packet = new DatagramPacket(buf, buf.length, address, 25566);
+        udp.send(packet);
+        packet = new DatagramPacket(buf, buf.length);
+        udp.receive(packet);
+        String received = new String(packet.getData(), 0, packet.getLength());
+
+        //if ()
+
+        createNewConnection(received);
 
         Message authMessage = new Message();
         authMessage.setMessageType(MessageType.AUTH);
@@ -79,7 +93,7 @@ public class ClientMessageWorker implements Runnable {
         return ConnectionResult.ERROR;
     }
 
-    private void createNewConnection() {
+    private void createNewConnection(String serverIP) {
         try {
             clientSocket = new Socket(SERVER_IP, PORT);
             outputStream = clientSocket.getOutputStream();
