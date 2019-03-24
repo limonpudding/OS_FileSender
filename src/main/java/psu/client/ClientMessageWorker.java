@@ -5,6 +5,7 @@ import psu.entities.ConnectionResult;
 import psu.entities.Message;
 import psu.entities.MessageType;
 import psu.utils.FileSender;
+import psu.utils.GlobalConstants;
 
 import java.io.*;
 import java.net.DatagramPacket;
@@ -40,14 +41,6 @@ public class ClientMessageWorker implements Runnable {
         return clientSocket;
     }
 
-    public static ObjectInputStream getMessageInput() {
-        return messageInput;
-    }
-
-    public static ObjectOutputStream getMessageOutput() {
-        return messageOutput;
-    }
-
     private ClientMessageWorker() {
     }
 
@@ -61,16 +54,7 @@ public class ClientMessageWorker implements Runnable {
     public ConnectionResult tryCreateConnection(String name) throws IOException, ClassNotFoundException {
         clientName = name;
 
-        byte[] buf = "GET_SERVER_IP".getBytes();
-        DatagramSocket udp = new DatagramSocket();
-        InetAddress address = InetAddress.getByName("localhost");
-        DatagramPacket packet = new DatagramPacket(buf, buf.length, address, 25566);
-        udp.send(packet);
-        packet = new DatagramPacket(buf, buf.length);
-        udp.receive(packet);
-        String received = new String(packet.getData(), 0, packet.getLength());
-
-        //if ()
+        String received = getServerIP(); //получаем IP адрес сервера
 
         createNewConnection(received);
 
@@ -93,9 +77,20 @@ public class ClientMessageWorker implements Runnable {
         return ConnectionResult.ERROR;
     }
 
+    private static String getServerIP() throws IOException {
+        byte[] buf = GlobalConstants.GET_SERVER_IP.getBytes();
+        DatagramSocket socketUDP = new DatagramSocket();
+        InetAddress address = InetAddress.getByName("192.168.1.255");
+        DatagramPacket packet = new DatagramPacket(buf, buf.length, address, 25565);
+        socketUDP.send(packet);
+        packet = new DatagramPacket(buf, buf.length);
+        socketUDP.receive(packet);
+        return new String(packet.getData(), 0, packet.getLength());
+    }
+
     private void createNewConnection(String serverIP) {
         try {
-            clientSocket = new Socket(SERVER_IP, PORT);
+            clientSocket = new Socket(serverIP, PORT);
             outputStream = clientSocket.getOutputStream();
             messageOutput = new ObjectOutputStream(outputStream);
             inputStream = clientSocket.getInputStream();
