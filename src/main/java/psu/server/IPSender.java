@@ -25,11 +25,12 @@ public class IPSender extends Thread {
     @Override
     public void run() {
         DatagramPacket packet;
-        byte[] buf = new byte[256];
+        byte[] buf;
         String received;
 
         try {
             while (true) {
+                buf = new byte[256];
                 packet = new DatagramPacket(buf, buf.length);
                 socket.receive(packet);
                 received = new String(packet.getData(), 0, packet.getLength());
