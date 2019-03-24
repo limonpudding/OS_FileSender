@@ -1,42 +1,54 @@
 package psu.server;
 
+import psu.utils.GlobalConstants;
+
 import java.io.IOException;
-import java.net.DatagramPacket;
-import java.net.DatagramSocket;
-import java.net.InetAddress;
-import java.net.SocketException;
+import java.net.*;
 
 public class IPSender extends Thread {
 
     private DatagramSocket socket;
-    private byte[] buf = new byte[256];
+    private String localServerIP;
 
     IPSender() throws SocketException {
-        socket = new DatagramSocket(25566);
-        this.setDaemon(true);
+        try {
+            socket = new DatagramSocket(25565);
+            socket.connect(InetAddress.getByName("8.8.8.8"), 25565); // Немного костыльный способ получения адреса в локальной сети
+            localServerIP = socket.getLocalAddress().getHostAddress();
+            socket.disconnect();
+            this.setDaemon(true);
+        } catch (UnknownHostException ex) {
+            ex.printStackTrace();
+        }
     }
 
     @Override
     public void run() {
-        while (true) {
-            try {
-                DatagramPacket packet = new DatagramPacket(buf, buf.length);
+        DatagramPacket packet;
+        byte[] buf = new byte[256];
+        String received;
+
+        try {
+            while (true) {
+                packet = new DatagramPacket(buf, buf.length);
                 socket.receive(packet);
+                received = new String(packet.getData(), 0, packet.getLength());
 
-                String received = new String(packet.getData(), 0, packet.getLength());
+                if (received.equals(GlobalConstants.GET_SERVER_IP)) {
+                    buf = localServerIP.getBytes();
+                    packet = new DatagramPacket(
+                            buf,
+                            buf.length,
+                            packet.getAddress(),
+                            packet.getPort());
 
-                if (received.equals("GET_SERVER_IP")) {
-                    InetAddress address = packet.getAddress();
-                    int port = packet.getPort();
-                    buf = InetAddress.getByName("localhost").toString().getBytes();
-                    packet = new DatagramPacket(buf, buf.length, address, port);
                     socket.send(packet);
                 }
-            } catch (IOException ex) {
-                ex.printStackTrace();
-            } finally {
-                socket.close();
             }
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        } finally {
+            socket.close();
         }
     }
 }

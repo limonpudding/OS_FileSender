@@ -15,4 +15,5 @@ public class GlobalConstants {
     public static final int TIMEOUT = 500;
     public static final String CONNECTION_LOST = "Соединение с пользователем ''{0}'' утеряно";
     public static final String MESSAGE_SEND_ERROR = "Ошибка при отправке сообщения клиенту ''{0}''";
+    public static final String GET_SERVER_IP = "GET_SERVER_IP";
 }
