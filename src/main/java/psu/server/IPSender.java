@@ -12,13 +12,14 @@ public class IPSender extends Thread {
 
     IPSender() throws SocketException {
         try {
-            socket = new DatagramSocket(25565);
-            socket.connect(InetAddress.getByName("8.8.8.8"), 25565); // Немного костыльный способ получения адреса в локальной сети
+            socket = new DatagramSocket(GlobalConstants.PORT);
+            socket.connect(InetAddress.getByName("8.8.8.8"), GlobalConstants.PORT); // Немного костыльный способ получения адреса в локальной сети
             localServerIP = socket.getLocalAddress().getHostAddress();
             socket.disconnect();
             this.setDaemon(true);
         } catch (UnknownHostException ex) {
             ex.printStackTrace();
+            //TODO нормально обработать
         }
     }
 
@@ -30,7 +31,7 @@ public class IPSender extends Thread {
 
         try {
             while (true) {
-                buf = new byte[256];
+                buf = new byte[GlobalConstants.BUF_SIZE_IP];
                 packet = new DatagramPacket(buf, buf.length);
                 socket.receive(packet);
                 received = new String(packet.getData(), 0, packet.getLength());
@@ -48,6 +49,7 @@ public class IPSender extends Thread {
             }
         } catch (IOException ex) {
             ex.printStackTrace();
+            //TODO нормально обработать
         } finally {
             socket.close();
         }

@@ -80,8 +80,8 @@ public class ClientMessageWorker implements Runnable {
     private static String getServerIP() throws IOException {
         byte[] buf = GlobalConstants.GET_SERVER_IP.getBytes();
         DatagramSocket socketUDP = new DatagramSocket();
-        InetAddress address = InetAddress.getByName("192.168.1.255");
-        DatagramPacket packet = new DatagramPacket(buf, buf.length, address, 25565);
+        InetAddress address = InetAddress.getByName("192.168.1.255"); // а что если маска сети другая??? TODO придумать способ получения широковещательного адреса
+        DatagramPacket packet = new DatagramPacket(buf, buf.length, address, GlobalConstants.PORT);
         socketUDP.send(packet);
         packet = new DatagramPacket(buf, buf.length);
         socketUDP.receive(packet);
@@ -130,12 +130,13 @@ public class ClientMessageWorker implements Runnable {
                     case ERROR_CLIENT:
                         // ?
                         break;
-                    default: //whaaat
+                    default:
                         System.out.println("Неизвестный тип сообщения");
                 }
             }
         } catch (Exception ex) {
             ex.printStackTrace();
+            //TODO нормально обработать
         }
     }
 
@@ -152,7 +153,7 @@ public class ClientMessageWorker implements Runnable {
             messageOutput.writeObject(notification);
             messageOutput.flush();
         } catch (IOException e) {
-            e.printStackTrace();//сделать норм обрбоотку
+            e.printStackTrace();//TODO нормально обработать
         }
     }
 
@@ -165,7 +166,7 @@ public class ClientMessageWorker implements Runnable {
             messageOutput.writeObject(authMessage);
             messageOutput.flush();
         } catch (IOException e) {
-            e.printStackTrace();//сделать норм обрбоотку
+            e.printStackTrace();//TODO нормально обработать
         }
     }
 }

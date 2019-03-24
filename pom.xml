@@ -21,7 +21,7 @@
                 <configuration>
                     <archive>
                         <manifest>
-                            <mainClass>psu.server.ServerTest</mainClass>
+                            <mainClass>psu.server.Server</mainClass>
                         </manifest>
                     </archive>
                 </configuration>
@@ -47,7 +47,7 @@
                     </execution>
                 </executions>
                 <configuration>
-                    <mainClass>psu.server.ServerTest</mainClass>
+                    <mainClass>psu.server.Server</mainClass>
                 </configuration>
             </plugin>
 

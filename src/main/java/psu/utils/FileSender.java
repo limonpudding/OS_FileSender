@@ -8,12 +8,12 @@ import java.io.*;
 import java.net.Socket;
 import java.text.MessageFormat;
 
-import static psu.utils.GlobalConstants.BUF_SIZE;
+import static psu.utils.GlobalConstants.BUF_SIZE_FILE;
 import static psu.utils.Utils.showAlertMessage;
 
 public class FileSender {
 
-    private static byte[] buffer = new byte[BUF_SIZE];
+    private static byte[] buffer = new byte[BUF_SIZE_FILE];
 
     public static void sendFile(File file) {
         Socket socket = ClientMessageWorker.getClientSocket();
@@ -30,6 +30,7 @@ public class FileSender {
             showAlertMessage("Отправка файла", "Статус", GlobalConstants.SEND_FILE_SUCCESS, Alert.AlertType.INFORMATION);
         } catch (IOException e) {
             e.printStackTrace();
+            //TODO нормально обработать
         }
     }
 
@@ -46,6 +47,7 @@ public class FileSender {
             }
         } catch (IOException e) {
             e.printStackTrace();
+            //TODO нормально обработать
         }
     }
 
@@ -63,6 +65,7 @@ public class FileSender {
             showAlertMessage("Отправка файла", "Статус", MessageFormat.format(GlobalConstants.ACCEPT_FILE_SUCCESS, file.getName(), file.getAbsolutePath()), Alert.AlertType.INFORMATION);
         } catch (IOException e) {
             e.printStackTrace();
+            //TODO нормально обработать
         }
     }
 

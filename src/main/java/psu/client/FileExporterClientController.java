@@ -82,7 +82,7 @@ public class FileExporterClientController {
         FileSender.sendFile(openedFile);
     }
 
-    public FileExporterClientController() throws IOException {
+    public FileExporterClientController() {
         connectedUsers = FXCollections.observableArrayList();
         usersList = new ListView<String>();
         usersList.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
@@ -115,12 +115,6 @@ public class FileExporterClientController {
 
     public synchronized void pushToTextArea(String sender, String message) {
         textArea.appendText(sender + ": " + message + "\n");
-    }
-
-    public synchronized void addUserToListView(String name) {
-        //connectedUsers = FXCollections.observableArrayList();
-        connectedUsers.add(name);
-        //usersList.setItems(connectedUsers);
     }
 
     public synchronized void setUsersList(List<String> users) {
