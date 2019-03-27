@@ -6,6 +6,7 @@ import psu.entities.Message;
 import psu.entities.MessageType;
 import psu.utils.FileSender;
 import psu.utils.GlobalConstants;
+import psu.utils.Utils;
 
 import java.io.*;
 import java.net.DatagramPacket;
@@ -80,7 +81,7 @@ public class ClientMessageWorker implements Runnable {
     private static String getServerIP() throws IOException {
         byte[] buf = GlobalConstants.GET_SERVER_IP.getBytes();
         DatagramSocket socketUDP = new DatagramSocket();
-        InetAddress address = InetAddress.getByName("192.168.1.255"); // а что если маска сети другая??? TODO придумать способ получения широковещательного адреса
+        InetAddress address = InetAddress.getByName("192.168."+ Utils.getThirdIpPart() +".255"); // а что если маска сети другая??? TODO придумать способ получения широковещательного адреса
         DatagramPacket packet = new DatagramPacket(buf, buf.length, address, GlobalConstants.PORT);
         socketUDP.send(packet);
         packet = new DatagramPacket(buf, buf.length);
