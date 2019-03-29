@@ -9,20 +9,20 @@
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.RowConstraints?>
 
-<AnchorPane prefHeight="90.0" prefWidth="300.0" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="psu.client.LoginFormController">
+<AnchorPane prefHeight="300.0" prefWidth="400.0" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="psu.client.LoginFormController">
    <children>
       <GridPane>
         <columnConstraints>
-          <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="150.0" />
-          <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="150.0" />
+          <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="200.0" />
+          <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="200.0" />
         </columnConstraints>
         <rowConstraints>
-          <RowConstraints maxHeight="30.0" minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-          <RowConstraints maxHeight="30.0" minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-          <RowConstraints maxHeight="30.0" minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+          <RowConstraints maxHeight="100.0" minHeight="10.0" prefHeight="100.0" vgrow="SOMETIMES" />
+          <RowConstraints maxHeight="100.0" minHeight="10.0" prefHeight="100.0" vgrow="SOMETIMES" />
+          <RowConstraints maxHeight="100.0" minHeight="10.0" prefHeight="100.0" vgrow="SOMETIMES" />
         </rowConstraints>
          <children>
-            <Label contentDisplay="CENTER" text="Введите желаемое имя:" GridPane.columnSpan="2" GridPane.valignment="BOTTOM">
+            <Label contentDisplay="CENTER" text="Имя:" GridPane.columnSpan="2" GridPane.valignment="BOTTOM">
                <GridPane.margin>
                   <Insets left="10.0" />
                </GridPane.margin></Label>
@@ -30,7 +30,7 @@
                <GridPane.margin>
                   <Insets left="10.0" right="10.0" />
                </GridPane.margin></TextField>
-            <Button fx:id="continueButton" mnemonicParsing="false" onAction="#connectToServer" text="Продолжить" GridPane.columnIndex="1" GridPane.halignment="RIGHT" GridPane.rowIndex="2">
+            <Button fx:id="continueButton" mnemonicParsing="false" onAction="#connectToServer" text="Подключиться" GridPane.columnIndex="1" GridPane.halignment="RIGHT" GridPane.rowIndex="1">
                <GridPane.margin>
                   <Insets left="10.0" right="10.0" />
                </GridPane.margin></Button>

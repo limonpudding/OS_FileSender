@@ -57,7 +57,7 @@ public class LoginFormController {
 
     private void createMainForm() {
         Pane mainWindow = getMainFormResource();
-        Scene mainScene = new Scene(mainWindow, 700, 400);
+        Scene mainScene = new Scene(mainWindow, 703, 133);
         Stage stage = new Stage();
         stage.setScene(mainScene);
         stage.setTitle(MessageFormat.format(GlobalConstants.FILE_SENDER_TITLE, userNameField.getText()));

@@ -44,7 +44,7 @@ public class Utils {
 
     public static String getThirdIpPart() {
         try {
-            DatagramSocket socket = new DatagramSocket(GlobalConstants.PORT-1);
+            DatagramSocket socket = new DatagramSocket(GlobalConstants.PORT - 1);
             socket.connect(InetAddress.getByName("8.8.8.8"), GlobalConstants.PORT); // Немного костыльный способ получения адреса в локальной сети
             String part = String.valueOf(socket.getLocalAddress().getAddress()[2]);
             socket.disconnect();
