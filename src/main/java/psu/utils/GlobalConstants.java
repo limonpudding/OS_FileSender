@@ -18,6 +18,6 @@ public class GlobalConstants {
     public static final String MESSAGE_SEND_ERROR = "Ошибка при отправке сообщения клиенту ''{0}''";
 
     //layouts
-    public final static String LOGIN_WINDOW_FXML = "/layouts/LoginTemplate.fxml";
-    public final static String MAIN_WINDOW_FXML = "/layouts/FileExporterTemplate.fxml";
+    public final static String LOGIN_WINDOW_FXML = "/layouts/ServerStarter.fxml";
+    public final static String MAIN_WINDOW_FXML = "/layouts/ServerMainTemplate.fxml";
 }
