@@ -3,27 +3,17 @@ package psu.server;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Scene;
-import javafx.scene.control.*;
-import javafx.scene.input.KeyEvent;
-import javafx.scene.layout.Pane;
-import javafx.scene.layout.TilePane;
-import javafx.stage.Stage;
+import javafx.scene.control.Label;
+import javafx.scene.control.ListView;
+import javafx.scene.control.TextField;
 import psu.client.ClientMessageWorker;
-import psu.entities.ConnectionResult;
-import psu.utils.CustomTimer;
-import psu.utils.GlobalConstants;
+import psu.entities.Message;
+import psu.entities.MessageType;
 
-import java.io.IOException;
-import java.util.List;
-import java.util.Timer;
-
-import static psu.client.ClientMessageWorker.clientMessager;
-import static psu.server.ServerStarter.initializeScoreboardStage;
 import static psu.server.ServerStarterController.leftTeam;
 import static psu.server.ServerStarterController.rightTeam;
-import static psu.utils.Utils.showAlertMessage;
+import static psu.utils.GlobalConstants.SERVER_NAME;
+import static psu.utils.Utils.createNewMessage;
 
 public class ServerController {
 
@@ -32,20 +22,28 @@ public class ServerController {
     private ObservableList<String> leftTeamStrikersList;
     private ObservableList<String> rightTeamStrikersList;
 
-    @FXML
-    private ListView leftTeamStrikers;
+    public static ListView leftTeamStrikersPublic;
+
+    public static ListView rightTeamStrikersPublic;
 
     @FXML
-    private ListView rightTeamStrikers;
+    public ListView leftTeamStrikers;
 
     @FXML
-    private TextField leftTeamStriker;
+    public ListView rightTeamStrikers;
 
     @FXML
-    private TextField rightTeamStriker;
+    public TextField leftTeamStriker;
+
+    @FXML
+    public TextField rightTeamStriker;
 
     @FXML
     public void initialize() {
+        UserConnection.setController(this);
+        leftTeamStrikersPublic = leftTeamStrikers;
+        rightTeamStrikersPublic = rightTeamStrikers;
+
         leftTeamName.setText(leftTeam);
         rightTeamName.setText(rightTeam);
         globalTimer = timeToEnd;
@@ -54,22 +52,22 @@ public class ServerController {
     }
 
     @FXML
-    private Label leftTeamName;
+    public Label leftTeamName;
 
     @FXML
-    private Label rightTeamName;
+    public Label rightTeamName;
 
     @FXML
-    private Label timeToEnd;
+    public Label timeToEnd;
 
     @FXML
-    private Label leftTeamScore;
+    public Label leftTeamScore;
 
     @FXML
-    private Label rightTeamScore;
+    public Label rightTeamScore;
 
-    int leftScore = 0;
-    int rightScore = 0;
+    public static int leftScore = 0;
+    public static int rightScore = 0;
 
     @FXML
     @SuppressWarnings("unchecked")
@@ -77,6 +75,7 @@ public class ServerController {
         leftTeamStrikersList.add(globalTimer.getText()+", "+leftTeamStriker.getText());
         leftTeamStrikers.setItems(leftTeamStrikersList);
         leftTeamScore.setText(String.valueOf(++leftScore));
+        UserConnection.sendStatusForAll();
     }
 
     @FXML
@@ -85,32 +84,11 @@ public class ServerController {
         rightTeamStrikersList.add(globalTimer.getText()+", "+rightTeamStriker.getText());
         rightTeamStrikers.setItems(rightTeamStrikersList);
         rightTeamScore.setText(String.valueOf(++rightScore));
+        UserConnection.sendStatusForAll();
     }
 
     @FXML
     private void stopMatch(){
 
-    }
-
-    @FXML
-    private void connectToServer() throws IOException, ClassNotFoundException {
-        ConnectionResult connectionResult = ClientMessageWorker.getInstance().tryCreateConnection();
-        switch (connectionResult) {
-            case SUCCESS:
-                showAlertMessage("Подключение", "Статус", "Успешно подключен", Alert.AlertType.INFORMATION);
-                //createMainForm();
-                initializeScoreboardStage.close();
-                clientMessager = new Thread(ClientMessageWorker.getInstance());
-                clientMessager.start();
-                break;
-            case USERNAME_NOT_AVAILABLE:
-                showAlertMessage("Подключение", "Статус", "Это имя занято, попробуйте другое", Alert.AlertType.WARNING);
-                break;
-            case ERROR:
-                showAlertMessage("Подключение", "Статус", "Неизвестная ошибка", Alert.AlertType.ERROR);
-                break;
-            default:
-                throw new RuntimeException("Неизвестный тип сообщения при попытке подключения к серверу");
-        }
     }
 }

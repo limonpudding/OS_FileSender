@@ -3,6 +3,7 @@ package psu.server;
 import psu.entities.ConnectionResult;
 import psu.entities.Message;
 import psu.entities.MessageType;
+import psu.utils.CustomTimer;
 import psu.utils.FileSender;
 import psu.utils.GlobalConstants;
 import psu.utils.Utils;
@@ -11,11 +12,17 @@ import java.io.*;
 import java.net.Socket;
 import java.text.MessageFormat;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+
+import static psu.utils.GlobalConstants.SERVER_NAME;
 
 public class UserConnection implements Runnable {
 
     private static List<UserConnection> userConnections = new ArrayList<>();
+
+    private static ServerController controller;
 
     private ConnectionResult connectionResult = ConnectionResult.NONE;
 
@@ -62,15 +69,12 @@ public class UserConnection implements Runnable {
         Message authRequest = (Message) messageInput.readObject();
         if (authRequest.getMessageType() == MessageType.AUTH) {
             Message authResponse = Utils.createNewMessage(MessageType.AUTH);
-            authResponse.setSender(GlobalConstants.SERVER_NAME);
+            authResponse.setSender(SERVER_NAME);
             setUserName(authRequest.getSender());
 
-            if (isIncorrectUsername(authRequest)) {
-                connectionResult = ConnectionResult.USERNAME_NOT_AVAILABLE;
-            } else {
-                userConnections.add(this);
-                connectionResult = ConnectionResult.SUCCESS;
-            }
+            userConnections.add(this);
+            connectionResult = ConnectionResult.SUCCESS;
+
             authResponse.setAttachment(connectionResult);
             messageOutput.writeObject(authResponse);
             messageOutput.flush();
@@ -85,7 +89,7 @@ public class UserConnection implements Runnable {
         String sender = authRequest.getSender();
         return sender == null
                 || isExistUsername(sender)
-                || GlobalConstants.SERVER_NAME.equals(sender)
+                || SERVER_NAME.equals(sender)
                 || sender.trim().equals("");
     }
 
@@ -114,6 +118,11 @@ public class UserConnection implements Runnable {
                         //для всех клиентов
                         messageForAll(messageForSend);
                         break;
+                    case INITIALIZE_REQUEST:
+
+                        //для всех клиентов
+                        sendStatusForAll();
+                        break;
                     case ERROR_CLIENT:
                         break;
                     case USER_CONNECTED:
@@ -124,7 +133,7 @@ public class UserConnection implements Runnable {
                         System.out.println("Неверный тип сообщения");
                         Message errorMessage = Utils.createNewMessage(MessageType.ERROR_SERVER);
                         errorMessage.setContent("Произошла ошибка, данные, полученные сервером, не прошли проверку.");
-                        errorMessage.setSender(GlobalConstants.SERVER_NAME);
+                        errorMessage.setSender(SERVER_NAME);
                 }
             }
         } catch (Exception ex) {
@@ -138,7 +147,7 @@ public class UserConnection implements Runnable {
             throw new RuntimeException("Пользователь с таким именем не найтен");
         }
         Message message = Utils.createNewMessage(MessageType.USER_DISCONNECTED);
-        message.setSender(GlobalConstants.SERVER_NAME);
+        message.setSender(SERVER_NAME);
         message.setContent(userName);
         message.setAttachment(createListNames());
         messageForAll(message);
@@ -160,9 +169,38 @@ public class UserConnection implements Runnable {
         }
     }
 
+    public static synchronized void sendStatusForAll() {
+
+        Message messageForSend = Utils.createNewMessage(MessageType.INITIALIZE_REQUEST);
+        messageForSend.setSender(SERVER_NAME);
+
+        Map<String, Object> currentStatus = new HashMap<>();
+
+        currentStatus.put("leftTeamName", controller.leftTeamName.getText());
+        currentStatus.put("rightTeamName", controller.rightTeamName.getText());
+        currentStatus.put("leftTeamScore", controller.leftTeamScore.getText());
+        currentStatus.put("rightTeamScore", controller.rightTeamScore.getText());
+        currentStatus.put("rightTeamStrikers", new ArrayList<String>(controller.rightTeamStrikers.getItems()));
+        currentStatus.put("leftTeamStrikers", new ArrayList<String>(controller.leftTeamStrikers.getItems()));
+        currentStatus.put("minute", CustomTimer.minute);
+        currentStatus.put("second", CustomTimer.second);
+
+        messageForSend.setAttachment(currentStatus);
+
+        for (UserConnection userConnection : userConnections) {
+            messageForSend.setRecipient(userConnection.getUserName());
+            try {
+                userConnection.getMessageOutput().writeObject(messageForSend);
+                userConnection.getMessageOutput().flush();
+            } catch (IOException e) {
+                throw new RuntimeException(MessageFormat.format(GlobalConstants.MESSAGE_SEND_ERROR, userConnection.getUserName()));
+            }
+        }
+    }
+
     private synchronized void notifyUserConnected() throws IOException {
         Message messageForSend = Utils.createNewMessage(MessageType.USER_CONNECTED);
-        messageForSend.setSender(GlobalConstants.SERVER_NAME);
+        messageForSend.setSender(SERVER_NAME);
         messageForSend.setContent(getUserName());
         messageForSend.setAttachment(createListNames());
 
@@ -190,5 +228,13 @@ public class UserConnection implements Runnable {
             }
         }
         return false;
+    }
+
+    public ServerController getController() {
+        return controller;
+    }
+
+    public static void setController(ServerController serverController) {
+        controller = serverController;
     }
 }

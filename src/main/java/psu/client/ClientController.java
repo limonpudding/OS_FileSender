@@ -1,5 +1,6 @@
 package psu.client;
 
+import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -8,8 +9,13 @@ import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
 import psu.entities.ConnectionResult;
+import psu.server.ServerController;
+import psu.utils.CustomTimer;
 
 import java.io.IOException;
+import java.util.List;
+import java.util.Map;
+import java.util.Timer;
 
 import static psu.client.ClientMessageWorker.clientMessager;
 import static psu.server.ServerStarter.initializeScoreboardStage;
@@ -18,8 +24,6 @@ import static psu.server.ServerStarterController.rightTeam;
 import static psu.utils.Utils.showAlertMessage;
 
 public class ClientController {
-
-    public static Label globalTimer;
 
     private ObservableList<String> leftTeamStrikersList;
     private ObservableList<String> rightTeamStrikersList;
@@ -37,15 +41,6 @@ public class ClientController {
     private TextField rightTeamStriker;
 
     @FXML
-    public void initialize() {
-        leftTeamName.setText(leftTeam);
-        rightTeamName.setText(rightTeam);
-        globalTimer = timeToEnd;
-        leftTeamStrikersList = FXCollections.observableArrayList();
-        rightTeamStrikersList = FXCollections.observableArrayList();
-    }
-
-    @FXML
     private Label leftTeamName;
 
     @FXML
@@ -60,28 +55,38 @@ public class ClientController {
     @FXML
     private Label rightTeamScore;
 
-    int leftScore = 0;
-    int rightScore = 0;
-
-    @FXML
     @SuppressWarnings("unchecked")
-    private void goalLeft(){
-        leftTeamStrikersList.add(globalTimer.getText()+", "+leftTeamStriker.getText());
-        leftTeamStrikers.setItems(leftTeamStrikersList);
-        leftTeamScore.setText(String.valueOf(++leftScore));
+    public void updateStatus(Map<String, Object> data) {
+        Platform.runLater(() -> {
+            leftTeamName.setText((String) data.get("leftTeamName"));
+            rightTeamName.setText((String) data.get("rightTeamName"));
+            leftTeamScore.setText((String) data.get("leftTeamScore"));
+            rightTeamScore.setText((String) data.get("rightTeamScore"));
+
+            ObservableList<String> tempLeftStrikers = FXCollections.observableArrayList();
+            tempLeftStrikers.addAll((List) data.get("leftTeamStrikers"));
+
+            ObservableList<String> tempRightStrikers = FXCollections.observableArrayList();
+            tempRightStrikers.addAll((List) data.get("rightTeamStrikers"));
+
+            rightTeamStrikers.setItems(tempRightStrikers);
+            leftTeamStrikers.setItems(tempLeftStrikers);
+            CustomTimer.minute = (Integer) data.get("minute");
+            CustomTimer.second = (Integer) data.get("second");
+        });
     }
 
     @FXML
-    @SuppressWarnings("unchecked")
-    private void goalRight(){
-        rightTeamStrikersList.add(globalTimer.getText()+", "+rightTeamStriker.getText());
-        rightTeamStrikers.setItems(rightTeamStrikersList);
-        rightTeamScore.setText(String.valueOf(++rightScore));
-    }
+    public void initialize() {
+        ServerController.globalTimer = timeToEnd;
+        new Timer().schedule(new CustomTimer(10,10),0,1000);
+        try {
+            connectToServer();
+        } catch (IOException | ClassNotFoundException e) {
+        }
 
-    @FXML
-    private void stopMatch(){
-
+        ClientMessageWorker.setController(this);
+        ClientMessageWorker.getInstance().sendInitializeRequest();
     }
 
     @FXML
@@ -90,8 +95,6 @@ public class ClientController {
         switch (connectionResult) {
             case SUCCESS:
                 showAlertMessage("Подключение", "Статус", "Успешно подключен", Alert.AlertType.INFORMATION);
-                //createMainForm();
-                initializeScoreboardStage.close();
                 clientMessager = new Thread(ClientMessageWorker.getInstance());
                 clientMessager.start();
                 break;

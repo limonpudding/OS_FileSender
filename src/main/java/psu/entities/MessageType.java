@@ -8,6 +8,7 @@ public enum MessageType {
     ERROR_SERVER("Ошибка на стороне сервера"),
     ERROR_CLIENT("Ошибка на стороне клиента"),
     MESSAGE("Сообщение"),
+    INITIALIZE_REQUEST("Запрос инициализации"),
 
     //Мессаги для скорбоарда
     GOAL_LEFT("Забила первая команда"),

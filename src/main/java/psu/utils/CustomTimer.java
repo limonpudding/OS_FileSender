@@ -9,12 +9,12 @@ import static psu.server.ServerController.globalTimer;
 
 public class CustomTimer extends TimerTask {
 
-    private int minute;
-    private int second;
+    public static int minute;
+    public static int second;
 
     public CustomTimer(int minute, int second) {
-        this.minute = minute;
-        this.second = second;
+        CustomTimer.minute = minute;
+        CustomTimer.second = second;
     }
 
     @Override

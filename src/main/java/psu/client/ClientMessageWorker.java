@@ -4,7 +4,6 @@ import javafx.scene.control.Alert;
 import psu.entities.ConnectionResult;
 import psu.entities.Message;
 import psu.entities.MessageType;
-import psu.utils.FileSender;
 import psu.utils.GlobalConstants;
 import psu.utils.Utils;
 
@@ -13,7 +12,7 @@ import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
 import java.net.Socket;
-import java.util.List;
+import java.util.Map;
 
 import static psu.utils.GlobalConstants.*;
 import static psu.utils.Utils.createNewMessage;
@@ -21,7 +20,7 @@ import static psu.utils.Utils.showAlertMessage;
 
 public class ClientMessageWorker implements Runnable {
 
-    private Controller controller;
+    private static ClientController controller;
     private final static String SERVER_NAME = "SERVER_HOST";
 
     public static Thread clientMessager;
@@ -93,6 +92,7 @@ public class ClientMessageWorker implements Runnable {
     }
 
     @Override
+    @SuppressWarnings("unchecked")
     public void run() {
         try {
             while (clientSocket.isConnected()) {
@@ -100,28 +100,21 @@ public class ClientMessageWorker implements Runnable {
                 System.out.println("Пришёл MessageType: " + message.getMessageType().name());
                 switch (message.getMessageType()) {
                     case USER_CONNECTED:
-                        // Обновить список пользователей
-                        controller.setUsersList((List<String>) message.getAttachment());
                         break;
                     case USER_DISCONNECTED:
-                        // Обновить список пользователей
-                        controller.setUsersList((List<String>) message.getAttachment());
                         break;
                     case ERROR_SERVER:
                         // Обработать ошибку с сервера
                         break;
                     case NEW_FILE_REQUEST:
-                        FileSender.acceptFile(
-                                new File(Controller.destinationFolder + "/" + message.getContent())
-                        );
                         break;
                     case MESSAGE:
-                        // Обработать полученное сообщение
-                        controller.pushToTextArea(message.getSender(), message.getContent());
                         break;
                     case ERROR_CLIENT:
                         // ?
                         break;
+                    case INITIALIZE_REQUEST:
+                        controller.updateStatus((Map<String,Object>)message.getAttachment());
                     default:
                         System.out.println("Неизвестный тип сообщения");
                 }
@@ -132,22 +125,10 @@ public class ClientMessageWorker implements Runnable {
         }
     }
 
-    public void setController(Controller controller) {
-        this.controller = controller;
+    public static void setController(ClientController controller) {
+        ClientMessageWorker.controller = controller;
     }
 
-    public void sendFileNotification() {
-        Message notification = createNewMessage(MessageType.NEW_FILE_REQUEST);
-        notification.setSender(clientName);
-        notification.setContent(Controller.openedFile.getName());
-        notification.setRecipient(Controller.selectedUser.toString());
-        try {
-            messageOutput.writeObject(notification);
-            messageOutput.flush();
-        } catch (IOException e) {
-            e.printStackTrace();//TODO нормально обработать
-        }
-    }
 
     public void sendMessage(String message) {
         Message authMessage = createNewMessage(MessageType.MESSAGE);
@@ -159,6 +140,18 @@ public class ClientMessageWorker implements Runnable {
             messageOutput.flush();
         } catch (IOException e) {
             e.printStackTrace();//TODO нормально обработать
+        }
+    }
+
+    public void sendInitializeRequest(){
+        Message authMessage = createNewMessage(MessageType.INITIALIZE_REQUEST);
+        authMessage.setSender(clientName);
+        authMessage.setRecipient(SERVER_NAME);
+        try {
+            messageOutput.writeObject(authMessage);
+            messageOutput.flush();
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 }
