@@ -16,9 +16,9 @@ public class FileExporterClient extends Application {
     public void start(Stage stage) throws Exception {
         Platform.setImplicitExit(false);
         loginFormStage = stage;
-        Parent loginForm = FXMLLoader.load(getClass().getResource(GlobalConstants.LOGIN_WINDOW_FXML));
+        Parent loginForm = FXMLLoader.load(getClass().getResource(GlobalConstants.SERVER_STARTER_FXML));
         loginFormStage.setTitle("FileSender | Авторизация");
-        loginFormStage.setScene(new Scene(loginForm, 400, 300));
+        loginFormStage.setScene(new Scene(loginForm));
         loginFormStage.setOnCloseRequest(event -> System.exit(0));
         loginFormStage.setResizable(false);
         loginFormStage.show();

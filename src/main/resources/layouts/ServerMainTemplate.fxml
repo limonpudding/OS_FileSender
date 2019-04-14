@@ -34,8 +34,8 @@
             <Font size="29.0" />
          </font>
       </Label>
-      <ListView layoutX="27.0" layoutY="139.0" prefHeight="200.0" prefWidth="189.0" />
-      <ListView layoutX="371.0" layoutY="139.0" prefHeight="200.0" prefWidth="189.0" />
+      <ListView id="leftTeamStrikers" layoutX="27.0" layoutY="139.0" prefHeight="200.0" prefWidth="189.0" />
+      <ListView id="rightTeamStrikers" layoutX="371.0" layoutY="139.0" prefHeight="200.0" prefWidth="189.0" />
       <Button layoutX="81.0" layoutY="351.0" mnemonicParsing="false" text="Гол!">
          <font>
             <Font size="25.0" />

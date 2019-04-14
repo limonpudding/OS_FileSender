@@ -1,16 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
-<?import javafx.scene.control.Label?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.AnchorPane?>
-<?import javafx.scene.layout.ColumnConstraints?>
-<?import javafx.scene.layout.GridPane?>
-<?import javafx.scene.layout.RowConstraints?>
 
-<AnchorPane prefHeight="300.0" prefWidth="400.0" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="psu.client.LoginFormController">
+<AnchorPane prefHeight="139.0" prefWidth="299.0" xmlns="http://javafx.com/javafx/8.0.172-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="psu.client.LoginFormController">
    <children>
-
+      <TextField layoutX="14.0" layoutY="35.0" promptText="Команда левая" />
+      <TextField layoutX="14.0" layoutY="60.0" promptText="Команда правая" />
+      <TextField layoutX="180.0" layoutY="48.0" prefHeight="25.0" prefWidth="45.0" promptText="Минуты" />
+      <TextField layoutX="239.0" layoutY="48.0" prefHeight="25.0" prefWidth="45.0" promptText="Секунды" />
+      <Button id="continueButton" layoutX="14.0" layoutY="100.0" mnemonicParsing="false" text="Стартуем" />
    </children>
 </AnchorPane>

@@ -30,7 +30,6 @@ public class LoginFormController {
     @FXML
     public void initialize() {
         continueButton.addEventHandler(KeyEvent.KEY_PRESSED, this::continueHandler);
-        userNameField.addEventHandler(KeyEvent.KEY_PRESSED, this::continueHandler);
     }
 
     @FXML
@@ -57,7 +56,7 @@ public class LoginFormController {
 
     private void createMainForm() {
         Pane mainWindow = getMainFormResource();
-        Scene mainScene = new Scene(mainWindow, 703, 133);
+        Scene mainScene = new Scene(mainWindow);
         Stage stage = new Stage();
         stage.setScene(mainScene);
         stage.setTitle(MessageFormat.format(GlobalConstants.FILE_SENDER_TITLE, userNameField.getText()));
@@ -69,9 +68,9 @@ public class LoginFormController {
     private Pane getMainFormResource() {
         Pane mainWindow;
         try {
-            mainWindow = FXMLLoader.load(getClass().getResource(GlobalConstants.MAIN_WINDOW_FXML));
+            mainWindow = FXMLLoader.load(getClass().getResource(GlobalConstants.SERVER_MAIN_TEMPLATE_FXML));
         } catch (IOException e) {
-            throw new RuntimeException("Не найден шаблон " + GlobalConstants.MAIN_WINDOW_FXML);
+            throw new RuntimeException("Не найден шаблон " + GlobalConstants.SERVER_MAIN_TEMPLATE_FXML);
         }
         return mainWindow;
     }
