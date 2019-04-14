@@ -27,7 +27,7 @@ public class FileSender {
                 outputStream.write(buffer, 0, length);
             }
             inputStream.close();
-            showAlertMessage("Отправка файла", "Статус", GlobalConstants.SEND_FILE_SUCCESS, Alert.AlertType.INFORMATION);
+           showAlertMessage("Отправка файла", "Статус", GlobalConstants.SEND_FILE_SUCCESS, Alert.AlertType.INFORMATION);
         } catch (IOException e) {
             e.printStackTrace();
             //TODO нормально обработать

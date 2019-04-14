@@ -47,7 +47,7 @@
                     </execution>
                 </executions>
                 <configuration>
-                    <mainClass>psu.client.FileExporterClient</mainClass>
+                    <mainClass>psu.server.ServerStarter</mainClass>
                 </configuration>
             </plugin>
 

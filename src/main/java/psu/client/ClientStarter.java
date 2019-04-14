@@ -8,7 +8,7 @@ import javafx.scene.Scene;
 import javafx.stage.Stage;
 import psu.utils.GlobalConstants;
 
-public class FileExporterClient extends Application {
+public class ClientStarter extends Application {
 
     public static Stage loginFormStage;
 
@@ -16,16 +16,11 @@ public class FileExporterClient extends Application {
     public void start(Stage stage) throws Exception {
         Platform.setImplicitExit(false);
         loginFormStage = stage;
-        Parent loginForm = FXMLLoader.load(getClass().getResource(GlobalConstants.SERVER_STARTER_FXML));
-        loginFormStage.setTitle("FileSender | Авторизация");
+        Parent loginForm = FXMLLoader.load(getClass().getResource(GlobalConstants.CLIENT_MAIN_TEMPLATE_FXML));
+        loginFormStage.setTitle("Скорбоард клиент");
         loginFormStage.setScene(new Scene(loginForm));
         loginFormStage.setOnCloseRequest(event -> System.exit(0));
         loginFormStage.setResizable(false);
         loginFormStage.show();
-    }
-
-
-    public static void main(String[] args) {
-        launch(args);
     }
 }

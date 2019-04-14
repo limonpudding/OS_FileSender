@@ -7,7 +7,12 @@ public enum MessageType {
     AUTH("Попытка аутентификации"),
     ERROR_SERVER("Ошибка на стороне сервера"),
     ERROR_CLIENT("Ошибка на стороне клиента"),
-    MESSAGE("Сообщение");
+    MESSAGE("Сообщение"),
+
+    //Мессаги для скорбоарда
+    GOAL_LEFT("Забила первая команда"),
+    GOAL_RIGHT("Забила правая команда"),
+    STOP_MATCH("Матч остановлен");
 
     private String info;
 

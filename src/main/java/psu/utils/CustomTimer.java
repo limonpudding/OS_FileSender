@@ -1,0 +1,37 @@
+package psu.utils;
+
+import javafx.application.Platform;
+import javafx.scene.control.Label;
+
+import java.util.TimerTask;
+
+import static psu.server.ServerController.globalTimer;
+
+public class CustomTimer extends TimerTask {
+
+    private int minute;
+    private int second;
+
+    public CustomTimer(int minute, int second) {
+        this.minute = minute;
+        this.second = second;
+    }
+
+    @Override
+    public void run() {
+
+        Platform.runLater(() -> {
+            if (second > 0) {
+                second--;
+            } else {
+                second = 59;
+                minute--;
+            }
+            if (minute == 0 && second == 0) {
+                return;
+            }
+            globalTimer.setText(String.format("%02d", minute) + ":" + String.format("%02d", second));
+        });
+    }
+
+}

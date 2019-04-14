@@ -21,7 +21,7 @@ import java.util.List;
 import static psu.utils.Utils.getFileSize;
 import static psu.utils.Utils.showAlertMessage;
 
-public class FileExporterClientController {
+public class Controller {
 
     public static String destinationFolder = "C:/";
 
@@ -82,11 +82,7 @@ public class FileExporterClientController {
         FileSender.sendFile(openedFile);
     }
 
-    public FileExporterClientController() {
-        connectedUsers = FXCollections.observableArrayList();
-        usersList = new ListView<String>();
-        usersList.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
-        usersList.setItems(connectedUsers);
+    public Controller() {
         ClientMessageWorker.getInstance().setController(this);
     }
 

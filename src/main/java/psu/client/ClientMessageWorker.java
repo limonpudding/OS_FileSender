@@ -13,7 +13,6 @@ import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
 import java.net.Socket;
-import java.text.MessageFormat;
 import java.util.List;
 
 import static psu.utils.GlobalConstants.*;
@@ -22,7 +21,7 @@ import static psu.utils.Utils.showAlertMessage;
 
 public class ClientMessageWorker implements Runnable {
 
-    private FileExporterClientController controller;
+    private Controller controller;
     private final static String SERVER_NAME = "SERVER_HOST";
 
     public static Thread clientMessager;
@@ -52,28 +51,20 @@ public class ClientMessageWorker implements Runnable {
         return instance;
     }
 
-    public ConnectionResult tryCreateConnection(String name) throws IOException, ClassNotFoundException {
-        clientName = name;
-
+    public ConnectionResult tryCreateConnection() throws IOException, ClassNotFoundException {
         String received = getServerIP(); //получаем IP адрес сервера
 
         createNewConnection(received);
 
         Message authMessage = new Message();
         authMessage.setMessageType(MessageType.AUTH);
-        authMessage.setSender(clientName);
-        authMessage.setContent(clientName);
         authMessage.setRecipient(SERVER_NAME);
         messageOutput.writeObject(authMessage);
         messageOutput.flush();
         Message answer = (Message) messageInput.readObject();
         if (answer.getMessageType() == MessageType.AUTH
                 && answer.getSender().equals(SERVER_NAME)) {
-            if (answer.getAttachment().equals(ConnectionResult.SUCCESS)) {
-                return ConnectionResult.SUCCESS;
-            } else {
-                return ConnectionResult.USERNAME_NOT_AVAILABLE;
-            }
+            return ConnectionResult.SUCCESS;
         }
         return ConnectionResult.ERROR;
     }
@@ -81,7 +72,7 @@ public class ClientMessageWorker implements Runnable {
     private static String getServerIP() throws IOException {
         byte[] buf = GlobalConstants.GET_SERVER_IP.getBytes();
         DatagramSocket socketUDP = new DatagramSocket();
-        InetAddress address = InetAddress.getByName("192.168."+ Utils.getThirdIpPart() +".255"); // а что если маска сети другая??? TODO придумать способ получения широковещательного адреса
+        InetAddress address = InetAddress.getByName("192.168." + Utils.getThirdIpPart() + ".255");
         DatagramPacket packet = new DatagramPacket(buf, buf.length, address, GlobalConstants.PORT);
         socketUDP.send(packet);
         packet = new DatagramPacket(buf, buf.length);
@@ -121,7 +112,7 @@ public class ClientMessageWorker implements Runnable {
                         break;
                     case NEW_FILE_REQUEST:
                         FileSender.acceptFile(
-                                new File(FileExporterClientController.destinationFolder + "/" + message.getContent())
+                                new File(Controller.destinationFolder + "/" + message.getContent())
                         );
                         break;
                     case MESSAGE:
@@ -141,15 +132,15 @@ public class ClientMessageWorker implements Runnable {
         }
     }
 
-    public void setController(FileExporterClientController controller) {
+    public void setController(Controller controller) {
         this.controller = controller;
     }
 
     public void sendFileNotification() {
         Message notification = createNewMessage(MessageType.NEW_FILE_REQUEST);
         notification.setSender(clientName);
-        notification.setContent(FileExporterClientController.openedFile.getName());
-        notification.setRecipient(FileExporterClientController.selectedUser.toString());
+        notification.setContent(Controller.openedFile.getName());
+        notification.setRecipient(Controller.selectedUser.toString());
         try {
             messageOutput.writeObject(notification);
             messageOutput.flush();
