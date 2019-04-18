@@ -119,7 +119,6 @@ public class UserConnection implements Runnable {
                         messageForAll(messageForSend);
                         break;
                     case INITIALIZE_REQUEST:
-
                         //для всех клиентов
                         sendStatusForAll();
                         break;
@@ -162,6 +161,21 @@ public class UserConnection implements Runnable {
             sendTestMessage.setRecipient(userConnection.getUserName());
             try {
                 userConnection.getMessageOutput().writeObject(sendTestMessage);
+                userConnection.getMessageOutput().flush();
+            } catch (IOException e) {
+                throw new RuntimeException(MessageFormat.format(GlobalConstants.MESSAGE_SEND_ERROR, userConnection.getUserName()));
+            }
+        }
+    }
+
+    public static synchronized void sendExitForAll(){
+        Message messageForSend = Utils.createNewMessage(MessageType.STOP_MATCH);
+        messageForSend.setSender(SERVER_NAME);
+
+        for (UserConnection userConnection : userConnections) {
+            messageForSend.setRecipient(userConnection.getUserName());
+            try {
+                userConnection.getMessageOutput().writeObject(messageForSend);
                 userConnection.getMessageOutput().flush();
             } catch (IOException e) {
                 throw new RuntimeException(MessageFormat.format(GlobalConstants.MESSAGE_SEND_ERROR, userConnection.getUserName()));

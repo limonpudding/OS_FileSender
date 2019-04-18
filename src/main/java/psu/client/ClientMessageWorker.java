@@ -113,6 +113,10 @@ public class ClientMessageWorker implements Runnable {
                     case ERROR_CLIENT:
                         // ?
                         break;
+                    case STOP_MATCH:
+                        clientSocket.close();
+                        Utils.showAlertMessageWithExit("Игра", "Статус", "Матч остановлен. Выход", Alert.AlertType.INFORMATION);
+
                     case INITIALIZE_REQUEST:
                         controller.updateStatus((Map<String,Object>)message.getAttachment());
                     default:

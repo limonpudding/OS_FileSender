@@ -89,6 +89,7 @@ public class ServerController {
 
     @FXML
     private void stopMatch(){
-
+        UserConnection.sendExitForAll();
+        System.exit(0);
     }
 }

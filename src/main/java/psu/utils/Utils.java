@@ -23,6 +23,16 @@ public class Utils {
             successConnect.showAndWait();
         });
     }
+    public static void showAlertMessageWithExit(String title, String header, String text, Alert.AlertType type) {
+        Platform.runLater(() -> {
+            Alert successConnect = new Alert(type);
+            successConnect.setTitle(title);
+            successConnect.setHeaderText(header);
+            successConnect.setContentText(text);
+            successConnect.showAndWait();
+            System.exit(0);
+        });
+    }
 
     public static String getFileSize(File file) {
         return String.valueOf(file.length());
