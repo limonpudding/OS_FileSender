@@ -10,7 +10,8 @@ public class GlobalConstants {
     public static final String GET_SERVER_IP = "GET_SERVER_IP";
 
     //GUI messages
-    public static final String SCOREBOARD_SERVER_TITLE = "Скоребоард сервер";
+    public static final String CLIENT_NAME = "Scoreboard";
+    public static final String SCOREBOARD_SERVER_TITLE = "Match administrator";
     public static final String FILE_SIZE_PATTERN = "Размер файла: {0} байт";
     public static final String SEND_FILE_SUCCESS = "Файл успешно отправлен";
     public static final String ACCEPT_FILE_SUCCESS = "Файл {0} успешно получен и доступен по пути ''{1}''";

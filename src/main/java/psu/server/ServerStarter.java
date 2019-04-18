@@ -26,7 +26,7 @@ public class ServerStarter extends Application {
         Platform.setImplicitExit(false);
         initializeScoreboardStage = stage;
         Parent loginForm = FXMLLoader.load(getClass().getResource(GlobalConstants.SERVER_STARTER_FXML));
-        initializeScoreboardStage.setTitle("Скорбоард сервер");
+        initializeScoreboardStage.setTitle(GlobalConstants.SCOREBOARD_SERVER_TITLE);
         initializeScoreboardStage.setScene(new Scene(loginForm));
         initializeScoreboardStage.setOnCloseRequest(event -> System.exit(0));
         initializeScoreboardStage.setResizable(false);

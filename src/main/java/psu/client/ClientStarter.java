@@ -17,7 +17,7 @@ public class ClientStarter extends Application {
         Platform.setImplicitExit(false);
         loginFormStage = stage;
         Parent loginForm = FXMLLoader.load(getClass().getResource(GlobalConstants.CLIENT_MAIN_TEMPLATE_FXML));
-        loginFormStage.setTitle("Скорбоард клиент");
+        loginFormStage.setTitle(GlobalConstants.CLIENT_NAME);
         loginFormStage.setScene(new Scene(loginForm));
         loginFormStage.setOnCloseRequest(event -> System.exit(0));
         loginFormStage.setResizable(false);

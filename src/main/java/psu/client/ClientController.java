@@ -94,7 +94,7 @@ public class ClientController {
         ConnectionResult connectionResult = ClientMessageWorker.getInstance().tryCreateConnection();
         switch (connectionResult) {
             case SUCCESS:
-                showAlertMessage("Подключение", "Статус", "Успешно подключен", Alert.AlertType.INFORMATION);
+                showAlertMessage("Match", "Info", "Now you are here!", Alert.AlertType.INFORMATION);
                 clientMessager = new Thread(ClientMessageWorker.getInstance());
                 clientMessager.start();
                 break;

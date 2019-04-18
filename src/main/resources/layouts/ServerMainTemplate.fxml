@@ -7,50 +7,42 @@
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.text.Font?>
 
-<Pane fx:id="root" minHeight="133.0" minWidth="589.0" prefHeight="478.0" prefWidth="589.0" scaleShape="false" xmlns="http://javafx.com/javafx/8.0.172-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="psu.server.ServerController">
+<Pane fx:id="root" minHeight="133.0" minWidth="575.0" prefHeight="292.0" prefWidth="575.0" scaleShape="false" xmlns="http://javafx.com/javafx/8.0.172-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="psu.server.ServerController">
    <children>
-      <Label fx:id="leftTeamScore" contentDisplay="CENTER" layoutX="96.0" layoutY="83.0" text="Счёт" textAlignment="CENTER">
+      <Label fx:id="leftTeamScore" contentDisplay="CENTER" layoutX="14.0" layoutY="40.0" text="Score" textAlignment="CENTER">
          <font>
-            <Font size="29.0" />
+            <Font size="14.0" />
          </font>
       </Label>
-      <Label fx:id="rightTeamScore" contentDisplay="CENTER" layoutX="435.0" layoutY="83.0" text="Счёт" textAlignment="CENTER">
+      <Label fx:id="rightTeamScore" contentDisplay="CENTER" layoutX="221.0" layoutY="40.0" text="Score" textAlignment="CENTER">
          <font>
-            <Font size="29.0" />
+            <Font size="14.0" />
          </font>
       </Label>
-      <Label fx:id="leftTeamName" contentDisplay="CENTER" layoutX="32.0" layoutY="58.0" text="Название левой команды" textAlignment="CENTER">
+      <Label fx:id="leftTeamName" contentDisplay="CENTER" layoutX="14.0" layoutY="22.0" text="Название левой команды" textAlignment="CENTER">
          <font>
             <Font size="16.0" />
          </font>
       </Label>
-      <Label fx:id="rightTeamName" contentDisplay="CENTER" layoutX="366.0" layoutY="58.0" text="Название правой команды" textAlignment="CENTER">
+      <Label fx:id="rightTeamName" contentDisplay="CENTER" layoutX="221.0" layoutY="22.0" text="Название правой команды" textAlignment="CENTER">
          <font>
             <Font size="16.0" />
          </font>
       </Label>
-      <Label fx:id="timeToEnd" contentDisplay="CENTER" layoutX="217.0" layoutY="178.0" prefHeight="43.0" prefWidth="149.0" text="Время до конца" textAlignment="CENTER">
+      <Label fx:id="timeToEnd" contentDisplay="CENTER" layoutX="420.0" layoutY="125.0" prefHeight="43.0" prefWidth="149.0" text="Время до конца" textAlignment="CENTER">
          <font>
             <Font size="29.0" />
          </font>
       </Label>
-      <ListView fx:id="leftTeamStrikers" layoutX="27.0" layoutY="139.0" prefHeight="200.0" prefWidth="189.0" />
-      <ListView fx:id="rightTeamStrikers" layoutX="371.0" layoutY="139.0" prefHeight="200.0" prefWidth="189.0" />
-      <Button layoutX="81.0" layoutY="351.0" mnemonicParsing="false" onAction="#goalLeft" text="Гол!">
+      <ListView fx:id="leftTeamStrikers" layoutX="14.0" layoutY="89.0" prefHeight="200.0" prefWidth="199.0" />
+      <ListView fx:id="rightTeamStrikers" layoutX="221.0" layoutY="89.0" prefHeight="200.0" prefWidth="199.0" />
+      <Button layoutX="163.0" layoutY="64.0" mnemonicParsing="false" onAction="#goalLeft" prefHeight="25.0" prefWidth="49.0" text="Click" />
+      <Button layoutX="367.0" layoutY="64.0" mnemonicParsing="false" onAction="#goalRight" prefHeight="25.0" prefWidth="49.0" text="Click" />
+      <TextField fx:id="leftTeamStriker" layoutX="14.0" layoutY="64.0" promptText="Striker" />
+      <TextField fx:id="rightTeamStriker" layoutX="220.0" layoutY="64.0" promptText="Striker" />
+      <Button layoutX="452.0" layoutY="89.0" mnemonicParsing="false" onAction="#stopMatch" text="STOP">
          <font>
-            <Font size="25.0" />
-         </font>
-      </Button>
-      <Button layoutX="425.0" layoutY="351.0" mnemonicParsing="false" onAction="#goalRight" text="Гол!">
-         <font>
-            <Font size="25.0" />
-         </font>
-      </Button>
-      <TextField fx:id="leftTeamStriker" layoutX="47.0" layoutY="424.0" promptText="Кто забил" />
-      <TextField fx:id="rightTeamStriker" layoutX="391.0" layoutY="424.0" promptText="Кто забил" />
-      <Button layoutX="203.0" layoutY="14.0" mnemonicParsing="false" onAction="#stopMatch" text="Остановить матч">
-         <font>
-            <Font size="20.0" />
+            <Font size="17.0" />
          </font>
       </Button>
    </children>

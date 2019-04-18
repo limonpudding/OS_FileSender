@@ -3,12 +3,14 @@ package psu.server;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
 import psu.client.ClientMessageWorker;
 import psu.entities.Message;
 import psu.entities.MessageType;
+import psu.utils.Utils;
 
 import static psu.server.ServerStarterController.leftTeam;
 import static psu.server.ServerStarterController.rightTeam;
@@ -72,18 +74,28 @@ public class ServerController {
     @FXML
     @SuppressWarnings("unchecked")
     private void goalLeft(){
-        leftTeamStrikersList.add(globalTimer.getText()+", "+leftTeamStriker.getText());
+        if ("".equals(leftTeamStriker.getText())){
+            Utils.showAlertMessage("Warning","Striker","Input striker name, please", Alert.AlertType.WARNING);
+            return;
+        }
+        leftTeamStrikersList.add("Time: "+globalTimer.getText()+" | Striker: "+leftTeamStriker.getText());
         leftTeamStrikers.setItems(leftTeamStrikersList);
         leftTeamScore.setText(String.valueOf(++leftScore));
+        leftTeamStriker.setText("");
         UserConnection.sendStatusForAll();
     }
 
     @FXML
     @SuppressWarnings("unchecked")
     private void goalRight(){
-        rightTeamStrikersList.add(globalTimer.getText()+", "+rightTeamStriker.getText());
+        if ("".equals(rightTeamStriker.getText())){
+            Utils.showAlertMessage("Warning","Striker","Input striker name, please", Alert.AlertType.WARNING);
+            return;
+        }
+        rightTeamStrikersList.add("Time: "+globalTimer.getText()+" | Striker: "+rightTeamStriker.getText());
         rightTeamStrikers.setItems(rightTeamStrikersList);
         rightTeamScore.setText(String.valueOf(++rightScore));
+        rightTeamStriker.setText("");
         UserConnection.sendStatusForAll();
     }
 

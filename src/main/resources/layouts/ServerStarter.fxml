@@ -3,13 +3,17 @@
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Font?>
 
 <AnchorPane prefHeight="139.0" prefWidth="299.0" xmlns="http://javafx.com/javafx/8.0.172-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="psu.server.ServerStarterController">
    <children>
-      <TextField fx:id="leftTeamTextField" layoutX="14.0" layoutY="35.0" promptText="Команда левая" />
-      <TextField fx:id="rightTeamTextField" layoutX="14.0" layoutY="60.0" promptText="Команда правая" />
-      <TextField fx:id="minuteTextField" layoutX="180.0" layoutY="48.0" prefHeight="25.0" prefWidth="45.0" promptText="Минуты" />
-      <TextField fx:id="secondTextField" layoutX="239.0" layoutY="48.0" prefHeight="25.0" prefWidth="45.0" promptText="Секунды" />
-      <Button fx:id="continueButton" layoutX="14.0" layoutY="100.0" mnemonicParsing="false" onAction="#createServerMainForm" text="Стартуем" />
+      <TextField fx:id="leftTeamTextField" layoutX="7.0" layoutY="14.0" prefHeight="25.0" prefWidth="135.0" promptText="Left team name" />
+      <TextField fx:id="rightTeamTextField" layoutX="156.0" layoutY="14.0" prefHeight="25.0" prefWidth="135.0" promptText="Right team name" />
+      <TextField fx:id="minuteTextField" layoutX="75.0" layoutY="48.0" prefHeight="25.0" prefWidth="67.0" promptText="Minutes" />
+      <TextField fx:id="secondTextField" layoutX="156.0" layoutY="48.0" prefHeight="25.0" prefWidth="67.0" promptText="Seconds" />
+      <Button fx:id="continueButton" layoutX="14.0" layoutY="79.0" mnemonicParsing="false" onAction="#createServerMainForm" prefHeight="53.0" prefWidth="272.0" text="START">
+         <font>
+            <Font size="27.0" />
+         </font></Button>
    </children>
 </AnchorPane>
